@@ -4,7 +4,7 @@
             <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5p) %logger - %m%n</Pattern>
         </layout>
     </appender>
-    <logger name="com.tvb.api" level="INFO" />
+    <logger name="com.tvb.domain" level="INFO" />
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>
     </root>

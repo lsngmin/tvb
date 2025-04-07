@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<User> user = userRepository.findByUserId(authRequest.getUser().getUserId());
 
         Optional<String> password = passwordRepository.findPasswordByUser(
-                user.orElseThrow(IllegalLoginTypeArgumentException::new
+                user.orElseThrow(InvalidCredentialsException::new
         ));
 
         if (password.isPresent() &&
