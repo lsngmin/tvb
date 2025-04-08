@@ -3,6 +3,7 @@ package com.tvb.domain.analysis.controller;
 import com.tvb.domain.analysis.service.WebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,24 +22,24 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/images")
-@RequiredArgsConstructor
 public class AnalyzeImageController {
     private final String fastApiUrl = "http://localhost:58651";
-    private final WebClientService webClientService;
+    @Autowired
+    private WebClientService webClientService;
 
-    @PostMapping("/{uuid}/analyze")
-    public ResponseEntity<?> analyzeImage(@PathVariable String uuid) {
-        String analyzeResult = webClientService.sendImageToAIServer(uuid);
-        log.info("{}", analyzeResult);
-        try {
-            // 응답 지연 - 3초
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // 인터럽트 처리
-        }
-
-        return ResponseEntity.ok().body(analyzeResult);
-    }
+//    @PostMapping("/{uuid}/analyze")
+//    public ResponseEntity<?> analyzeImage(@PathVariable String uuid) {
+//        String analyzeResult = webClientService.sendImageToAIServer(uuid);
+//        log.info("{}", analyzeResult);
+//        try {
+//            // 응답 지연 - 3초
+//            Thread.sleep(15000);
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt(); // 인터럽트 처리
+//        }
+//
+//        return ResponseEntity.ok().body(analyzeResult);
+//    }
 
     @PostMapping("/send_data")
     public String sendDataToFastAPI() throws IOException {
