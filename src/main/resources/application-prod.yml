@@ -7,5 +7,5 @@ spring:
 
 front:
   redirect:
-    url: https://tvb-front.vercel.app
-    login-url: https://tvb-front.vercel.app/login
+    url: https://www.tvsbox.click/
+    login-url: https://www.tvsbox.click/login
