@@ -29,9 +29,9 @@ public class AnalyzeImageController {
     private WebClientService webClientService;
 
     @PostMapping("/{uuid}/analyze")
-    public ResponseEntity<?> analyzeImage(@PathVariable String uuid) {
-        String uuuid = "d443616d-90cb-4114-81af-4c4495c06349_Pic.jpg";
-        String analyzeResult = webClientService.sendImageToAIServer(uuuid);
+    public ResponseEntity<?> analyzeImage(@PathVariable("uuid") String uuid) {
+        log.info("AnalyzeImageController: analyzeImage: {}", uuid);
+        String analyzeResult = webClientService.sendImageToAIServer(uuid);
         log.info("{}", analyzeResult);
         try {
             // 응답 지연 - 3초
