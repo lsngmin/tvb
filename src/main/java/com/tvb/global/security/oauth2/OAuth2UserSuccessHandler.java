@@ -45,11 +45,12 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             cookie.setHttpOnly(true);
             cookie.setSecure(true);//TODO: 현재는 https 통신을 지원하지 않아 비활성화 했지만 추후 https 통신 연결시 true 바꾸어야 한다.
             cookie.setPath("/");
+            cookie.setDomain("tvsbox.click");
             cookie.setMaxAge(7 * 24 * 60 * 60);
             cookie.setAttribute("SameSite", "None");
             response.addCookie(cookie);
             log.info("onAuthenticationSuccesscc: {}", cookie);
-            response.addHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Path=/; Max-Age=" + (7 * 24 * 60 * 60) + "; HttpOnly; Secure; SameSite=None");
+            //response.addHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Path=/; Max-Age=" + (7 * 24 * 60 * 60) + "; HttpOnly; Secure; SameSite=None");
 
         } else {
             System.out.println("NOOOOOOO");
