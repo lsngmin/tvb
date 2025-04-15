@@ -12,7 +12,7 @@ front:
 
 backend:
   upload:
-    path: upload
+    path: var/app/current/upload/
   base:
     url: https://api.tvsbox.click/
 
