@@ -1,10 +1,18 @@
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5p) %logger - %m%n</Pattern>
-        </layout>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger) - %msg%n
+                [%green(requestId=%X{requestId})] [%blue(ip=%X{ipAddress})] [%yellow(domain=%X{domain})]%n
+                [%magenta(ua=%X{userAgent})] [%cyan(os=%X{platform})] [%green(lang=%X{language})]%n
+            </pattern>
+
+        </encoder>
     </appender>
-    <logger name="com.tvb.domain" level="INFO" />
+
+    <logger name = "com.tvb" level="INFO"/>
+    <logger name = "com.tvb.Application" level="WARN"/>
+
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>
     </root>

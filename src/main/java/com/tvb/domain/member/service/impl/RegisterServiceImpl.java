@@ -14,11 +14,14 @@ import com.tvb.domain.member.repository.UserRepository;
 import com.tvb.domain.member.repository.PasswordRepository;
 import com.tvb.domain.member.service.RegisterService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+
+@Slf4j
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -37,9 +40,11 @@ public class RegisterServiceImpl implements RegisterService {
         RegisterPasswordRequestData passwordD_ = registerRequestData.getPassword();
 
         userRepository.findByUserId(userD_.getUserId()).ifPresent(user -> {
+            log.warn("User ID '{}' already exists.", userD_.getUserId());
             throw new DataIntegrityViolationException();
         });
         profileRepository.findByNickname(profileD_.getNickname()).ifPresent(profile -> {
+            log.warn("Nickname '{}' already exists.", profileD_.getNickname());
             throw new DataIntegrityViolationException();
         });
 
@@ -63,6 +68,8 @@ public class RegisterServiceImpl implements RegisterService {
                 .user(user)
                 .build();
         passwordRepository.save(password);
+
+        log.info("New user registered: userId={}", user.getUserId());
 
         return toRegisterResponse(user);
     }
