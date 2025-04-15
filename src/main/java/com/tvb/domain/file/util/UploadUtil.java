@@ -18,7 +18,7 @@ import java.util.UUID;
 @Component
 @Slf4j
 public class UploadUtil {
-    @Value("${backend.upload.path}")
+    @Value("${org.zerock.upload.path}")
     private String uploadPath;
 
     @PostConstruct

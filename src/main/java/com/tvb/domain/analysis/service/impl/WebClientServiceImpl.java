@@ -62,18 +62,19 @@ public class WebClientServiceImpl implements WebClientService {
                     .filter(Files::isRegularFile)
                     .filter(path -> path.getFileName().toString().equals(uuid))
                     .findFirst();
+            Path filePath = null;
             if (foundPath.isPresent()) {
-                Path filePath = foundPath.get();
+                filePath = foundPath.get();
                 log.info("{}", filePath);
                 return filePath;
             }
             //TODO Need Throw Exception
-            log.info("Failed to find file path {}", uuid);
+            log.info("Failed to find file path {}", dirPath);
             return null;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        log.info("Failed to find file path2 {}", uuid);
+        log.info("Failed to find file path2 {}", dirPath);
         return null;
 
     }
