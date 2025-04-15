@@ -39,6 +39,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         SocialLogin socialLogin = socialLoginRepository.findBySocialId(email)
                 .orElseGet(() -> registerSocial(providerId, email, name));
+        log.info("Registered Social Login: {}", socialLogin);
         return oAuth2User;
     }
 

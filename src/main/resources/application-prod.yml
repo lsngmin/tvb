@@ -7,8 +7,8 @@ spring:
 
 front:
   redirect:
-    url: https://www.tvsbox.click/
-    login-url: https://www.tvsbox.click/login
+    url: tvsbox.click
+    login-url: tvsbox.click/login
 
 backend:
   upload:
