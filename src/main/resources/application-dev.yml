@@ -9,3 +9,11 @@ front:
   redirect:
     url: http://localhost:3000
     login-url: http://localhost:3000/login
+
+backend:
+  upload:
+    path: upload
+
+ai:
+  base:
+    url: http://127.0.0.1:58651
