@@ -49,6 +49,8 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             cookie.setAttribute("SameSite", "None");
             response.addCookie(cookie);
             log.info("onAuthenticationSuccesscc: {}", cookie);
+            response.addHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Path=/; Max-Age=" + (7 * 24 * 60 * 60) + "; HttpOnly; Secure; SameSite=None");
+
         } else {
             System.out.println("NOOOOOOO");
         }

@@ -1,5 +1,10 @@
 server:
   port: 8080
+  servlet:
+    session:
+      cookie:
+        same-site: "strict"
+        secure: true
 
 spring:
   profiles:
@@ -33,3 +38,4 @@ org:
   zerock:
     upload:
       path: upload
+
