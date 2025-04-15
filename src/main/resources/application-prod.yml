@@ -9,3 +9,13 @@ front:
   redirect:
     url: https://www.tvsbox.click/
     login-url: https://www.tvsbox.click/login
+
+backend:
+  upload:
+    path: upload
+  base:
+    url: https://api.tvsbox.click/
+
+ai:
+  base:
+    url: http://117.17.149.66:58651
