@@ -30,3 +30,10 @@ org:
   zerock:
     upload:
       path: upload
+
+git-hub:
+  repo:
+    tvb: https://api.github.com/repos/lsngmin/tvb/issues
+    tvb-ai: https://api.github.com/repos/lsngmin/tvb-ai/issues
+    tvb-front: https://api.github.com/repos/lsngmin/tvb-front/issues
+    token: ${ACCESS_TOKEN_G}
