@@ -4,11 +4,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvb.domain.issue.dto.GithubIssue;
 import com.tvb.domain.issue.service.GitHubDataService;
+import io.micrometer.common.KeyValues;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -30,19 +33,22 @@ public class GitHubDataServiceImpl implements GitHubDataService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        String response_front = webClient.get()
+        String response_front = webClient_front.get()
                 .uri("?labels=🐞 BugFix")
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            GithubIssue issues_front = objectMapper.readValue(response_front, GithubIssue.class);
+            List<GithubIssue> issues_front = objectMapper.readValue(response_front, new TypeReference<>() {});
             List<GithubIssue> issues = objectMapper.readValue(response, new TypeReference<>() {});
-            issues.add(issues_front);
 
-            log.info(issues.toString());
-            return objectMapper.writeValueAsString(issues);
+            List<GithubIssue> mergedList = Stream.concat(issues_front.stream(), issues.stream())
+                    .distinct()
+                    .toList();
+
+            log.info(mergedList.toString());
+            return objectMapper.writeValueAsString(mergedList);
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
