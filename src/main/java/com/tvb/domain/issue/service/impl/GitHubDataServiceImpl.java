@@ -40,6 +40,7 @@ public class GitHubDataServiceImpl implements GitHubDataService {
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
+
         }
         return "";
     }
