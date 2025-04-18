@@ -20,7 +20,7 @@ public class GithubIssueController {
     private GitHubDataService gitHubDataService;
     @GetMapping("/")
     public ResponseEntity<?> getIssues()  {
-        String issues = gitHubDataService.fetchIssueData(1);
+        String issues = gitHubDataService.fetchIssueData();
         return ResponseEntity.ok(issues);
     }
 }
