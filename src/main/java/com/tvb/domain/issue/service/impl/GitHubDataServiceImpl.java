@@ -21,19 +21,25 @@ public class GitHubDataServiceImpl implements GitHubDataService {
 
 
     @Override
-    public String fetchIssueData(int repoNum)  {
-        String baseUrl = null;
-        switch (repoNum) {case 1:baseUrl = tvbBaseUrl; case 2: baseUrl = tvbAiBaseUrl; case 3: baseUrl = tvbFrontBaseUrl; default: baseUrl = tvbBaseUrl;}
-        WebClient webClient = initWebClient(baseUrl);
+    public String fetchIssueData()  {
+        WebClient webClient = initWebClient(tvbBaseUrl);
+        WebClient webClient_front = initWebClient(tvbFrontBaseUrl);
 
         String response = webClient.get()
                 .uri("?labels=🐞 BugFix")
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+        String response_front = webClient.get()
+                .uri("?labels=🐞 BugFix")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
+            GithubIssue issues_front = objectMapper.readValue(response_front, GithubIssue.class);
             List<GithubIssue> issues = objectMapper.readValue(response, new TypeReference<>() {});
+            issues.add(issues_front);
 
             log.info(issues.toString());
             return objectMapper.writeValueAsString(issues);
