@@ -35,7 +35,7 @@ public class WebClientServiceImpl implements WebClientService {
             byte[] imageBytes = is.readAllBytes();  // Java 9 이상
             ByteArrayResource resource = new ByteArrayResource(imageBytes);
             bodyBuilder.part("file", resource)
-                    .filename("detectedObject.jpg")
+                    .filename(uuid)
                     .contentType(MediaType.IMAGE_JPEG);
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,6 +76,5 @@ public class WebClientServiceImpl implements WebClientService {
         }
         log.info("Failed to find file path2 {}", dirPath);
         return null;
-
     }
 }
