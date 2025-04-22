@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -32,10 +33,13 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         log.info("onAuthenticationSuccessoau2: {}", oAuth2User);
         String socialId = oAuth2User.getAttribute("email");
-        log.info("onAuthenticationSuccessso: {}", socialId);
+        log.info("OAuth2 authentication success. Social email={}", socialId);
+
         Optional<User> user = socialLoginRepository.findUserBySocialId(socialId);
         log.info("onAuthenticationSuccessuss: {}", user);
         if (user.isPresent()) {
+            log.info("User found. userId={}, socialEmail={}", user.get().getUserId(), socialId);
+
             String refreshToken = jwtUtil.createToken(
                     AuthRequest.builder()
                             .user(user.get())
@@ -48,8 +52,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             cookie.setMaxAge(7 * 24 * 60 * 60);
             cookie.setAttribute("SameSite", "None");
             response.addCookie(cookie);
-            log.info("onAuthenticationSuccesscc: {}", cookie);
-            //response.addHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Path=/; Max-Age=" + (7 * 24 * 60 * 60) + "; HttpOnly; Secure; SameSite=None");
+            log.info("Refresh token set in cookie for userId={}", user.get().getUserId());
 
         } else {
             System.out.println("NOOOOOOO");
