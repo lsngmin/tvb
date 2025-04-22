@@ -57,6 +57,7 @@ jobs:
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
           echo "ACCESS_TOKEN_G=${{ secrets.ACCESS_TOKEN_G }}" >> $GITHUB_ENV
+          echo "SLACK_WEBHOOK_URI=${{ secrets.SLACK_WEBHOOK_URI }}" >> $GITHUB_ENV
 
       - name: Beanstalk Deploy
         uses: einaregilsson/beanstalk-deploy@v22

@@ -41,4 +41,4 @@ git-hub:
 logging:
   slack:
     config: classpath:logback-spring.xml
-    webhook-uri: https://hooks.slack.com/services/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
+    webhook-uri: ${SLACK_WEBHOOK_URI}
