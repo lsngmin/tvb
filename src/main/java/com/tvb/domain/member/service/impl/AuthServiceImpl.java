@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     private final SLog sLog;
     @Override
     public Map<String, String> makeTokenAndLogin(AuthRequest authRequest) {
-        sLog.info("dawdadawd");
+        sLog.info("로그인 서비스 로직");
         Optional<User> user = userRepository.findByUserId(authRequest.getUser().getUserId());
 
         Optional<String> password = passwordRepository.findPasswordByUser(

@@ -2,6 +2,7 @@ package com.tvb.domain.member.controller;
 
 import com.tvb.domain.member.dto.register.AuthRequest;
 import com.tvb.domain.member.service.AuthService;
+import com.tvb.infra.logging.slack.service.SLog;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final SLog sLog;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(HttpServletResponse response, @RequestBody AuthRequest authRequest) {
         log.info("Login request: {}", authRequest);
+        sLog.info("로그인 서비스 로직");
+
         return Optional.ofNullable(authService.makeTokenAndLogin(authRequest))
                 .map(tokenResponse -> Pair.of(
                         authService.storeRefreshTokenInCookie(tokenResponse.get("refreshToken")),

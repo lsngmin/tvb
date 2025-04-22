@@ -27,6 +27,7 @@ public class SLog {
     private final Slack slack = Slack.getInstance();
 
     public void info(String m) {
+        log.info(m);
         try{
             HttpServletRequest request = LoggingFilter.getRequest();
 
@@ -62,7 +63,7 @@ public class SLog {
         } catch (IOException error) {
             log.error(error.getMessage());
     }
-
+    log.info("전송 완료");
 //    public void send(Exception e) {
 //        try {
 //            Payload p = Payload.builder().
