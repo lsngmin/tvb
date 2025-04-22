@@ -6,6 +6,8 @@ on:
 
 jobs:
   build:
+    env:
+      TZ: Asia/Seoul
     runs-on: ubuntu-latest
     permissions:
       contents: read
