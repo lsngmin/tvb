@@ -53,6 +53,12 @@ jobs:
         run: |
           cp ./build/libs/tvb-0.0.1-SNAPSHOT.jar app.jar
           echo "web: java -jar app.jar --server.port=8080" > Procfile
+          
+          mkdir -p .ebextensions
+          echo "container_commands:" > .ebextensions/01-timezone.config
+          echo "  01_set_timezone:" >> .ebextensions/01-timezone.config
+          echo "    command: 'ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime'" >> .ebextensions/01-timezone.config
+          
           zip -r deploy.zip . -x '*.git*' 'build/*' 'gradle/*' '.gradle/*'
       - name: Set Up environment variables
         run: |
