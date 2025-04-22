@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -29,8 +31,11 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String socialId = oAuth2User.getAttribute("email");
+        log.info("OAuth2 authentication success. Social email={}", socialId);
         Optional<User> user = socialLoginRepository.findUserBySocialId(socialId);
         if (user.isPresent()) {
+            log.info("User found. userId={}, socialEmail={}", user.get().getUserId(), socialId);
+
             String refreshToken = jwtUtil.createToken(
                     AuthRequest.builder()
                             .user(user.get())
@@ -43,6 +48,8 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             cookie.setMaxAge(7 * 24 * 60 * 60);
             cookie.setAttribute("SameSite", "None");
             response.addCookie(cookie);
+
+            log.info("Refresh token set in cookie for userId={}", user.get().getUserId());
         } else {
             System.out.println("NOOOOOOO");
         }

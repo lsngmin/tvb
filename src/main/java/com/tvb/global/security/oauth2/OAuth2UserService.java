@@ -37,6 +37,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
 
+        log.info("OAuth2 login requested: providerId={}, email={}", providerId, email);
+
         SocialLogin socialLogin = socialLoginRepository.findBySocialId(email)
                 .orElseGet(() -> registerSocial(providerId, email, name));
         return oAuth2User;
@@ -48,7 +50,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .loginType(LoginType.GOOGLE)
                 .build();
         userRepository.save(user);
-        log.info("{}", user);
+
+        log.info("New user registered via social login: userId={}, email={}", user.getUserId(), email);
 
         Profile profile = Profile.builder()
                 .createdAt(LocalDateTime.now())
@@ -57,7 +60,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .user(user)
                 .build();
         profileRepository.save(profile);
-        log.info("{}", profile);
+        log.info("Profile created for social login: nickname={}", name);
 
         Password password = Password.builder()
                 .password(java.util.UUID.randomUUID().toString())
