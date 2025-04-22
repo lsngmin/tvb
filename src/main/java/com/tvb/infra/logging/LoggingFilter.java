@@ -1,6 +1,5 @@
 package com.tvb.infra.logging;
 
-import com.tvb.domain.log.UserRequestLogRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,16 +17,19 @@ import java.util.UUID;
 @Component
 @Order(1)
 public class LoggingFilter extends OncePerRequestFilter {
+    private static final ThreadLocal<HttpServletRequest> requestThreadLocal = new ThreadLocal<>();
 
-    private final RequestLogService requestLogService; // ✅ 주입 필요!
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+        requestThreadLocal.set(request);
+
 
         long startTime = System.currentTimeMillis();
+
 
         String ipAddress = request.getHeader("X-Forwarded-For");
         if (ipAddress == null || ipAddress.isBlank()) {
@@ -58,12 +60,13 @@ public class LoggingFilter extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(request, response);
+            requestThreadLocal.remove();
         } finally {
             long duration = System.currentTimeMillis() - startTime;
-
-            requestLogService.saveLog(request, response, duration);
-
             MDC.clear();
         }
+    }
+    public static HttpServletRequest getRequest() {
+        return requestThreadLocal.get();
     }
 }

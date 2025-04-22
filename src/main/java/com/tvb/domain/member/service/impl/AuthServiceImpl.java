@@ -2,13 +2,13 @@ package com.tvb.domain.member.service.impl;
 
 import com.tvb.domain.member.dto.register.AuthRequest;
 import com.tvb.domain.member.domain.User;
-import com.tvb.domain.member.exception.IllegalLoginTypeArgumentException;
 import com.tvb.domain.member.exception.InvalidAuthorizationHeaderException;
 import com.tvb.domain.member.exception.InvalidCredentialsException;
 import com.tvb.domain.member.repository.UserRepository;
 import com.tvb.domain.member.repository.PasswordRepository;
 import com.tvb.domain.member.service.AuthService;
 import com.tvb.global.security.jwt.util.JWTUtil;
+import com.tvb.infra.logging.slack.service.SLog;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +25,10 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final PasswordRepository passwordRepository;
-
+    private final SLog sLog;
     @Override
     public Map<String, String> makeTokenAndLogin(AuthRequest authRequest) {
+        sLog.info("dawdadawd");
         Optional<User> user = userRepository.findByUserId(authRequest.getUser().getUserId());
 
         Optional<String> password = passwordRepository.findPasswordByUser(
