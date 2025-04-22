@@ -29,10 +29,14 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        log.info("onAuthenticationSuccessayuthen: {}", authentication);
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        log.info("onAuthenticationSuccessoau2: {}", oAuth2User);
         String socialId = oAuth2User.getAttribute("email");
         log.info("OAuth2 authentication success. Social email={}", socialId);
+
         Optional<User> user = socialLoginRepository.findUserBySocialId(socialId);
+        log.info("onAuthenticationSuccessuss: {}", user);
         if (user.isPresent()) {
             log.info("User found. userId={}, socialEmail={}", user.get().getUserId(), socialId);
 
@@ -48,11 +52,12 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             cookie.setMaxAge(7 * 24 * 60 * 60);
             cookie.setAttribute("SameSite", "None");
             response.addCookie(cookie);
-
             log.info("Refresh token set in cookie for userId={}", user.get().getUserId());
+
         } else {
             System.out.println("NOOOOOOO");
         }
+        log.info("url received: {}", url);
         response.sendRedirect(url);
     }
 }

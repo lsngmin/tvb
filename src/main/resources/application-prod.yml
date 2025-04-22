@@ -1,3 +1,7 @@
+server:
+  port: 8080
+
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -7,5 +11,15 @@ spring:
 
 front:
   redirect:
-    url: https://www.tvsbox.click/
+    url: https://www.tvsbox.click
     login-url: https://www.tvsbox.click/login
+
+backend:
+  upload:
+    path: /var/app/current/upload/
+  base:
+    url: https://api.tvsbox.click/
+
+ai:
+  base:
+    url: http://117.17.149.66:8000
