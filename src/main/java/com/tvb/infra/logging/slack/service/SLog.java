@@ -2,6 +2,7 @@ package com.tvb.infra.logging.slack.service;
 
 import com.slack.api.Slack;
 import com.slack.api.webhook.Payload;
+import com.slack.api.webhook.WebhookResponse;
 import com.tvb.infra.logging.LoggingFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class SLog {
     private final Slack slack = Slack.getInstance();
 
     public void info(String m) {
-        log.info(m);
+        log.info("staart log m {}",m);
         try{
             HttpServletRequest request = LoggingFilter.getRequest();
 
@@ -49,7 +50,7 @@ public class SLog {
             sb2
                     .append("*INFO * - ").append(LocalDateTime.now().format(formatter));
 
-            slack.send(u, payload(p -> p
+            WebhookResponse r = slack.send(u, payload(p -> p
                     .attachments(List.of(
                             Attachment.builder()
                                     .fallback("Slack Error Message")
@@ -60,10 +61,13 @@ public class SLog {
                     ))
 
             ));
+            log.info(r.getBody());
+            log.info(r.getMessage());
         } catch (IOException error) {
             log.error(error.getMessage());
+            log.info("failed to send log message");
     }
-    log.info("전송 완료");
+    log.info("successfully sent log message");
 //    public void send(Exception e) {
 //        try {
 //            Payload p = Payload.builder().
