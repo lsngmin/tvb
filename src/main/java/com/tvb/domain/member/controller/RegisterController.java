@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegisterController {
     private final RegisterService registerService;
 
+    /**
+     * Handles user registration. This endpoint does not require JWT authentication.
+     *
+     * @param registerRequestData request payload containing user, profile, and password information
+     * @return HTTP 200 with RegisterResponse on successful registration
+     */
     @PostMapping
     public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequestData registerRequestData) {
         return ResponseEntity.ok(registerService.toRegisterUser(registerRequestData));

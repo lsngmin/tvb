@@ -22,13 +22,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Slf4j
-
 @Service
 public class RegisterServiceImpl implements RegisterService {
     @Autowired private UserRepository userRepository;
     @Autowired private ProfileRepository profileRepository;
     @Autowired private PasswordRepository passwordRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -40,11 +38,10 @@ public class RegisterServiceImpl implements RegisterService {
         RegisterPasswordRequestData passwordD_ = registerRequestData.getPassword();
 
         userRepository.findByUserId(userD_.getUserId()).ifPresent(user -> {
-            log.warn("User ID '{}' already exists.", userD_.getUserId());
-            throw new DataIntegrityViolationException();
+            throw DataIntegrityViolationException.forDuplicateUserId();
         });
         profileRepository.findByNickname(profileD_.getNickname()).ifPresent(profile -> {
-            log.warn("Nickname '{}' already exists.", profileD_.getNickname());
+            //todo 지금은 프론트엔드에서 닉네임 적는 곳이 없어 랜덤 값이 들어가지만 차후 닉네임이 설정되면 예외처리 개선 필요
             throw new DataIntegrityViolationException();
         });
 
@@ -52,6 +49,7 @@ public class RegisterServiceImpl implements RegisterService {
                 .userId(userD_.getUserId())
                 .loginType(userD_.getLoginType())
                 .build();
+
         userRepository.save(user);
 
         Profile profile = Profile.builder()

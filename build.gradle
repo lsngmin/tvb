@@ -72,8 +72,7 @@ dependencies {
 	implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 	implementation("com.slack.api:slack-api-client:1.45.3")
 
-
-
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 
