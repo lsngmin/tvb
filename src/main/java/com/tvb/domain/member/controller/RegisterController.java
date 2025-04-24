@@ -1,7 +1,8 @@
 package com.tvb.domain.member.controller;
 
-import com.tvb.domain.member.dto.register.RegisterRequestData;
-import com.tvb.domain.member.dto.register.RegisterResponse;
+import com.tvb.domain.member.dto.register.*;
+import com.tvb.domain.member.dto.register.module.*;
+import com.tvb.domain.member.exception.register.*;
 import com.tvb.domain.member.service.RegisterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 @RestController
 @RequestMapping("api/v1/register")
@@ -24,7 +27,36 @@ public class RegisterController {
      * @return HTTP 200 with RegisterResponse on successful registration
      */
     @PostMapping
-    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequestData registerRequestData) {
+    public ResponseEntity<RegisterResponse> registerUser(@RequestBody RegisterRequestData registerRequestData) {
+        //RequestData의 유효성 검증 로직입니다.
+        validateRequestData.accept(registerRequestData);
         return ResponseEntity.ok(registerService.toRegisterUser(registerRequestData));
     }
+
+    Predicate<RegisterPasswordRequestData> passswordValidator = pwd ->
+            pwd.getPassword().matches("^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}\\[\\]:\";'<>?,./]).{8,20}$");
+    Predicate<RegisterUserRequestData> userIdValidator = user ->
+        !user.getUserId().isBlank() &&
+                user.getUserId().matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
+    Predicate<RegisterProfileRequestData> profileValidator = profile ->
+            !profile.getNickname().isBlank();
+    Predicate<RegisterUserRequestData> loginTypeValidator = user ->
+            user.getLoginType() != null;
+
+
+    Consumer<RegisterRequestData> validateRequestData = r -> {
+        if(!userIdValidator.test(r.getUser())) {
+            throw new InvalidUserIdFormatException();
+        }
+        if(!passswordValidator.test(r.getPassword())) {
+            throw new InvalidPasswordFormatException();
+        }
+        if (!profileValidator.test(r.getProfile())) {
+            throw new InvalidNickNameFormatException();
+        }
+        if (!loginTypeValidator.test(r.getUser())) {
+            throw new InvalidLoginTypeFormatException();
+        }
+    };
+
 }

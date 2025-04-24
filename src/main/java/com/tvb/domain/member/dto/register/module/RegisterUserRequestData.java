@@ -14,10 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterUserRequestData {
-    @NotBlank(message = "User ID cannot be blank")
-    @Email(message = "Invalid email address")
     private String userId;
-
-    @NotNull(message = "The request data contains invalid fields")
     LoginType loginType;
 }

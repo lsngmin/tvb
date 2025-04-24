@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RegisterRequestData {
-    @Valid private RegisterUserRequestData user;
-    @Valid private RegisterProfileRequestData profile;
-    @Valid private RegisterPasswordRequestData password;
+    private RegisterUserRequestData user;
+    private RegisterProfileRequestData profile;
+    private RegisterPasswordRequestData password;
 }

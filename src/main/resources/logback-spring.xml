@@ -25,9 +25,9 @@
         </encoder>
     </appender>
 
-    <logger name = "com.tvb" level="INFO">
-        <appender-ref ref="ASPECT_LOGGING"/>
-    </logger>
+<!--    <logger name = "com.tvb" level="INFO">-->
+<!--        <appender-ref ref="ASPECT_LOGGING"/>-->
+<!--    </logger>-->
 
     <logger name = "com.tvb.Application" level="INFO"/>
 

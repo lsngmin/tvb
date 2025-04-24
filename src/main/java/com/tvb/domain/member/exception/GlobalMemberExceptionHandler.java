@@ -21,26 +21,26 @@ public class GlobalMemberExceptionHandler {
         );
     }
     //아래부터 회원가입 예외처리 핸들러 입니다.
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorMessageMap> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        StringBuilder errorMessages = new StringBuilder();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            errorMessages.append(error.getDefaultMessage()).append(" ");
-        });
-        String message = errorMessages.toString().trim();
-        return ResponseEntity.status(ErrorCode.REQUEST_VALIDATION_ERROR.getHttpStatus()).body(
-                new ErrorMessageMap(
-                        ErrorCode.REQUEST_VALIDATION_ERROR.getCode(),
-                        message.isEmpty() ? ErrorCode.REQUEST_VALIDATION_ERROR.getMessage() : message
-                )
-        );
-    }
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<ErrorMessageMap> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+//        StringBuilder errorMessages = new StringBuilder();
+//        ex.getBindingResult().getAllErrors().forEach(error -> {
+//            errorMessages.append(error.getDefaultMessage()).append(" ");
+//        });
+//        String message = errorMessages.toString().trim();
+//        return ResponseEntity.status(ErrorCode.REQUEST_VALIDATION_ERROR.getHttpStatus()).body(
+//                new ErrorMessageMap(
+//                        ErrorCode.REQUEST_VALIDATION_ERROR.getCode(),
+//                        message.isEmpty() ? ErrorCode.REQUEST_VALIDATION_ERROR.getMessage() : message
+//                )
+//        );
+//    }
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorMessageMap> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        return ResponseEntity.status(ErrorCode.REQUEST_VALIDATION_ERROR.getHttpStatus()).body(
+        return ResponseEntity.status(ErrorCode.INVALID_LOGINTYPE_ERROR.getHttpStatus()).body(
                 new ErrorMessageMap(
-                        ErrorCode.REQUEST_VALIDATION_ERROR.getCode(),
-                        ErrorCode.REQUEST_VALIDATION_ERROR.getMessage()
+                        ErrorCode.INVALID_LOGINTYPE_ERROR.getCode(),
+                        ErrorCode.INVALID_LOGINTYPE_ERROR.getMessage()
                 )
         );
     }

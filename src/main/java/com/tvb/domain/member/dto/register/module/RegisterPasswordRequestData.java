@@ -15,11 +15,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterPasswordRequestData {
-    @NotNull(message = "Password cannot be blank")
-    @Pattern(
-            regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,20}$",
-            message = "Password must be 8–20 characters long and include letters, numbers, and special characters"
-    )
     private String password;
     private LocalDateTime updatedAt;
     private User user;

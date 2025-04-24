@@ -16,8 +16,11 @@ public enum ErrorCode {
     //회원가입에서 발생하는 에러 코드입니다.
     REGISTRATION_FAILURE(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_USER_REQUEST", "Registration failed."),
     DUPLICATE_USER_ID(HttpStatus.UNPROCESSABLE_ENTITY, "DUPLICATE_USER_ID", "UserId already in use"),
-    REQUEST_VALIDATION_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "REQUEST_VALIDATION_ERROR", "The request data contains invalid fields");
-
+    REQUEST_VALIDATION_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "REQUEST_VALIDATION_ERROR", "The request data contains invalid fields"),
+    INVALID_PASSWORD_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_PASSWORD_ERROR", "Password must be 8–20 characters long and include letters, numbers, and special characters"),
+    INVALID_USERID_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_USERID_ERROR", "Please enter a valid email address"),
+    INVALID_NICKNAME_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_NICKNAME_ERROR", "NickName cannot be blank"),
+    INVALID_LOGINTYPE_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_LOGINTYPE_ERROR", "The request data contains invalid fields");
 
     private final HttpStatus httpStatus;
     private final String code;

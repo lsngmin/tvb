@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterProfileRequestData {
-    @NotBlank(message = "NickName cannot be blank")
     private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

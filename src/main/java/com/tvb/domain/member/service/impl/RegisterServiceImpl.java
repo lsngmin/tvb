@@ -66,9 +66,6 @@ public class RegisterServiceImpl implements RegisterService {
                 .user(user)
                 .build();
         passwordRepository.save(password);
-
-        log.info("New user registered: userId={}", user.getUserId());
-
         return toRegisterResponse(user);
     }
     private RegisterResponse toRegisterResponse(User user) {
