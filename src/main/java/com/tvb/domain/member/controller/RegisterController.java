@@ -1,7 +1,6 @@
 package com.tvb.domain.member.controller;
 
 import com.tvb.domain.member.dto.register.*;
-import com.tvb.domain.member.dto.register.module.*;
 import com.tvb.domain.member.exception.register.*;
 import com.tvb.domain.member.service.RegisterService;
 import jakarta.validation.Valid;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -35,14 +33,14 @@ public class RegisterController {
         return ResponseEntity.ok(registerService.toRegisterUser(registerRequestData));
     }
 
-    Predicate<RegisterPasswordRequestData> passswordValidator = pwd ->
+    Predicate<RegisterRequestData.PasswordRequestData> passswordValidator = pwd ->
             pwd.getPassword().matches("^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}\\[\\]:\";'<>?,./]).{8,20}$");
-    Predicate<RegisterUserRequestData> userIdValidator = user ->
+    Predicate<RegisterRequestData.UserRequestData> userIdValidator = user ->
         !user.getUserId().isBlank() &&
                 user.getUserId().matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
-    Predicate<RegisterProfileRequestData> profileValidator = profile ->
+    Predicate<RegisterRequestData.ProfileRequestData> profileValidator = profile ->
             !profile.getNickname().isBlank();
-    Predicate<RegisterUserRequestData> loginTypeValidator = user ->
+    Predicate<RegisterRequestData.UserRequestData> loginTypeValidator = user ->
             !user.getLoginType().isBlank();
 
 

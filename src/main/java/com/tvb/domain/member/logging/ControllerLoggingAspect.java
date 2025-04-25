@@ -1,14 +1,10 @@
 package com.tvb.domain.member.logging;
 
-import com.tvb.domain.member.domain.User;
 import com.tvb.domain.member.dto.register.RegisterRequestData;
 import com.tvb.domain.member.dto.register.RegisterResponse;
-import com.tvb.domain.member.dto.register.module.RegisterUserRequestData;
-import com.tvb.domain.member.exception.common.AuthException;
 import com.tvb.domain.member.exception.common.RegisterException;
 import com.tvb.domain.member.exception.register.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;

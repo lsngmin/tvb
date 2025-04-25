@@ -3,9 +3,6 @@ package com.tvb.domain.member.service.impl;
 import com.tvb.domain.member.domain.LoginType;
 import com.tvb.domain.member.dto.register.RegisterRequestData;
 import com.tvb.domain.member.dto.register.RegisterResponse;
-import com.tvb.domain.member.dto.register.module.RegisterPasswordRequestData;
-import com.tvb.domain.member.dto.register.module.RegisterProfileRequestData;
-import com.tvb.domain.member.dto.register.module.RegisterUserRequestData;
 import com.tvb.domain.member.domain.Password;
 import com.tvb.domain.member.domain.Profile;
 import com.tvb.domain.member.domain.User;
@@ -34,9 +31,9 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     @Transactional
     public RegisterResponse toRegisterUser(RegisterRequestData registerRequestData) {
-        RegisterUserRequestData userD_ = registerRequestData.getUser();
-        RegisterProfileRequestData profileD_ = registerRequestData.getProfile();
-        RegisterPasswordRequestData passwordD_ = registerRequestData.getPassword();
+        RegisterRequestData.UserRequestData userD_ = registerRequestData.getUser();
+        RegisterRequestData.ProfileRequestData profileD_ = registerRequestData.getProfile();
+        RegisterRequestData.PasswordRequestData passwordD_ = registerRequestData.getPassword();
 
         userRepository.findByUserId(userD_.getUserId()).ifPresent(user -> {
             throw DataIntegrityViolationException.forDuplicateUserId();

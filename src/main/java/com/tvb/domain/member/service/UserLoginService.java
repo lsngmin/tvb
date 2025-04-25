@@ -1,6 +1,6 @@
 package com.tvb.domain.member.service;
 
-import com.tvb.domain.member.dto.register.AuthRequest;
+import com.tvb.domain.member.dto.auth.AuthRequest;
 
 import java.util.Optional;
 

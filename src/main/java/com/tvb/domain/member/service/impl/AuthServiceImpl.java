@@ -1,6 +1,6 @@
 package com.tvb.domain.member.service.impl;
 
-import com.tvb.domain.member.dto.register.AuthRequest;
+import com.tvb.domain.member.dto.auth.AuthRequest;
 import com.tvb.domain.member.domain.User;
 import com.tvb.domain.member.exception.InvalidAuthorizationHeaderException;
 import com.tvb.domain.member.exception.InvalidCredentialsException;

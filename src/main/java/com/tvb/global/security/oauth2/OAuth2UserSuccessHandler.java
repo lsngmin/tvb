@@ -1,6 +1,6 @@
 package com.tvb.global.security.oauth2;
 
-import com.tvb.domain.member.dto.register.AuthRequest;
+import com.tvb.domain.member.dto.auth.AuthRequest;
 import com.tvb.domain.member.domain.User;
 import com.tvb.domain.member.repository.SocialLoginRepository;
 import com.tvb.global.security.jwt.util.JWTUtil;

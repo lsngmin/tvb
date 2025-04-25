@@ -1,4 +1,4 @@
-package com.tvb.domain.member.dto.register;
+package com.tvb.domain.member.dto.auth;
 
 
 import com.tvb.domain.member.domain.Password;
