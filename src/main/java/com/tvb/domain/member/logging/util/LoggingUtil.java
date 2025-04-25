@@ -12,7 +12,7 @@ public class LoggingUtil {
     private final SLog sLog;
 
     public String formatMessage(String a, String s, String d, Object... args) {
-        String f = String.format("\"%s %s\" %3s - %s | %-16s | %s(%s)",
+        String f = String.format("\"%-4s %s\" %3s - %s | %-16s | %s(%s)",
                 args[0], args[1], args[2], a, s, d, args[3]
         );
         return f;
