@@ -1,7 +1,6 @@
-package com.tvb.infra.logging.slack.service;
+package com.tvb.logging;
 
 import com.slack.api.Slack;
-import com.slack.api.webhook.Payload;
 import com.slack.api.webhook.WebhookResponse;
 import com.tvb.infra.logging.LoggingFilter;
 import jakarta.servlet.http.HttpServletRequest;

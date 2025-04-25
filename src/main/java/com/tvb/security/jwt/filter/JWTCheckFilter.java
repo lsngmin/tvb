@@ -1,7 +1,7 @@
-package com.tvb.global.security.jwt.filter;
+package com.tvb.security.jwt.filter;
 
-import com.tvb.global.security.jwt.principal.UserPrincipal;
-import com.tvb.global.security.jwt.util.JWTUtil;
+import com.tvb.security.jwt.principal.UserPrincipal;
+import com.tvb.security.jwt.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

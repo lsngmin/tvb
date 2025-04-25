@@ -1,9 +1,9 @@
-package com.tvb.global.security.oauth2;
+package com.tvb.domain.member.service.oauth2;
 
 import com.tvb.domain.member.dto.auth.AuthRequest;
 import com.tvb.domain.member.domain.user.User;
 import com.tvb.domain.member.repository.SocialLoginRepository;
-import com.tvb.global.security.jwt.util.JWTUtil;
+import com.tvb.security.jwt.util.JWTUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

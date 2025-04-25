@@ -2,7 +2,6 @@ package com.tvb.domain.member.controller;
 
 import com.tvb.domain.member.dto.auth.AuthRequest;
 import com.tvb.domain.member.service.AuthService;
-import com.tvb.infra.logging.slack.service.SLog;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

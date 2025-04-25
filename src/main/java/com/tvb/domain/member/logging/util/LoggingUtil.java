@@ -1,6 +1,6 @@
 package com.tvb.domain.member.logging.util;
 
-import com.tvb.infra.logging.slack.service.SLog;
+import com.tvb.logging.SLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

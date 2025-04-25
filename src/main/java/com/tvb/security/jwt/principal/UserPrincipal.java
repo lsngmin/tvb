@@ -1,4 +1,4 @@
-package com.tvb.global.security.jwt.principal;
+package com.tvb.security.jwt.principal;
 
 import lombok.RequiredArgsConstructor;
 

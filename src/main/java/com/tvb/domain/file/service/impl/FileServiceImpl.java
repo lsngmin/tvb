@@ -1,7 +1,7 @@
 package com.tvb.domain.file.service.impl;
 
 import com.tvb.domain.file.service.FileService;
-import com.tvb.global.security.jwt.util.JWTUtil;
+import com.tvb.security.jwt.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

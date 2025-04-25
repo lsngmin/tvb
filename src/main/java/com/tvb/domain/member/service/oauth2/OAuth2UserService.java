@@ -1,4 +1,4 @@
-package com.tvb.global.security.oauth2;
+package com.tvb.domain.member.service.oauth2;
 
 import com.tvb.domain.member.domain.Password;
 import com.tvb.domain.member.domain.Profile;

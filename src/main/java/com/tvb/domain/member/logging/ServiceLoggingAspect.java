@@ -3,7 +3,6 @@ package com.tvb.domain.member.logging;
 import com.tvb.domain.member.dto.register.RegisterRequestData;
 import com.tvb.domain.member.exception.auth.AuthException;
 import com.tvb.domain.member.logging.util.LoggingUtil;
-import com.tvb.infra.logging.slack.service.SLog;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

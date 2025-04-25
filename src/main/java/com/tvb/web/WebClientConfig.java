@@ -1,4 +1,4 @@
-package com.tvb.global.web;
+package com.tvb.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

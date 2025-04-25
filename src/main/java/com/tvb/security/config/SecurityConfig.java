@@ -1,8 +1,8 @@
-package com.tvb.global.security.config;
+package com.tvb.security.config;
 
-import com.tvb.global.security.jwt.filter.JWTCheckFilter;
-import com.tvb.global.security.oauth2.OAuth2UserService;
-import com.tvb.global.security.oauth2.OAuth2UserSuccessHandler;
+import com.tvb.security.jwt.filter.JWTCheckFilter;
+import com.tvb.domain.member.service.oauth2.OAuth2UserService;
+import com.tvb.domain.member.service.oauth2.OAuth2UserSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
