@@ -1,5 +1,6 @@
-package com.tvb.domain.member.exception.common;
+package com.tvb.domain.member.exception.register;
 
+import com.tvb.domain.member.exception.common.ErrorCode;
 import lombok.Getter;
 
 @Getter

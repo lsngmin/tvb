@@ -1,7 +1,7 @@
 package com.tvb.domain.member.service.impl;
 
 import com.tvb.domain.member.dto.auth.AuthRequest;
-import com.tvb.domain.member.domain.User;
+import com.tvb.domain.member.domain.user.User;
 import com.tvb.domain.member.exception.InvalidAuthorizationHeaderException;
 import com.tvb.domain.member.exception.InvalidCredentialsException;
 import com.tvb.domain.member.repository.UserRepository;
@@ -25,10 +25,10 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final PasswordRepository passwordRepository;
-    private final SLog sLog;
+
     @Override
     public Map<String, String> makeTokenAndLogin(AuthRequest authRequest) {
-        sLog.info("로그인 서비스 로직");
+
         Optional<User> user = userRepository.findByUserId(authRequest.getUser().getUserId());
 
         Optional<String> password = passwordRepository.findPasswordByUser(

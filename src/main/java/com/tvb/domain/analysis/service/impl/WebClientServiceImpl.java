@@ -23,7 +23,7 @@ public class WebClientServiceImpl implements WebClientService {
     @Value("${backend.upload.path}") private String uploadPath;
     @Value("${ai.base.url}") private String fastApiUrl;
 
-    private WebClient webClient = WebClient.builder()
+    private final WebClient webClient = WebClient.builder()
             .baseUrl(fastApiUrl)
             .build();
 

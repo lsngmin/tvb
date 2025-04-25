@@ -1,5 +1,6 @@
 package com.tvb.domain.member.domain;
 
+import com.tvb.domain.member.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

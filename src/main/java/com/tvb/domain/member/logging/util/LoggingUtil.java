@@ -1,13 +1,23 @@
-package com.tvb.domain.member.logging;
+package com.tvb.domain.member.logging.util;
 
+import com.tvb.infra.logging.slack.service.SLog;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public class LoggingUtil {
-    public static String formatMessage(String a, String s, String d, Object... args) {
+    private final SLog sLog;
+
+    public String formatMessage(String a, String s, String d, Object... args) {
         String f = String.format("\"%s %s\" %3s - %s | %-16s | %s(%s)",
                 args[0], args[1], args[2], a, s, d, args[3]
         );
         return f;
     }
-    public static String maskValue(String s) {
+    public String maskValue(String s) {
         if (s == null) return "";
         char[] c = s.toCharArray();
         for(int i = 3; i < c.length; i++) {

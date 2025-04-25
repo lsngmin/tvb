@@ -1,7 +1,6 @@
 package com.tvb.domain.member.exception.register;
 
 import com.tvb.domain.member.exception.common.ErrorCode;
-import com.tvb.domain.member.exception.common.RegisterException;
 
 import static com.tvb.domain.member.exception.common.ErrorCode.*;
 

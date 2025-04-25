@@ -1,4 +1,4 @@
-package com.tvb.domain.member.domain;
+package com.tvb.domain.member.domain.user;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

@@ -29,13 +29,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        if (path.startsWith("/api/v1/auth") || path.startsWith("/api/v1/register") ||
+        return path.startsWith("/api/v1/auth") || path.startsWith("/api/v1/register") ||
                 path.startsWith("/api/v1/auth/refresh") || path.startsWith("/health") ||
                 path.startsWith("/api/v1/auth/**") || path.startsWith("/api/v1/images/send_data") ||
-                path.startsWith("/api/v1/issue/")) {
-            return true;
-        }
-        return false;
+                path.startsWith("/api/v1/issue/");
     }
 
     @Override

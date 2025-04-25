@@ -1,6 +1,6 @@
 package com.tvb.domain.member.repository;
 
-import com.tvb.domain.member.domain.User;
+import com.tvb.domain.member.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

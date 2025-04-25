@@ -1,5 +1,8 @@
-package com.tvb.domain.member.domain;
+package com.tvb.domain.member.domain.user;
 
+import com.tvb.domain.member.domain.Password;
+import com.tvb.domain.member.domain.Profile;
+import com.tvb.domain.member.domain.SocialLogin;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

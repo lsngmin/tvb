@@ -2,7 +2,7 @@ package com.tvb.domain.member.dto.auth;
 
 
 import com.tvb.domain.member.domain.Password;
-import com.tvb.domain.member.domain.User;
+import com.tvb.domain.member.domain.user.User;
 import lombok.*;
 
 import java.util.HashMap;

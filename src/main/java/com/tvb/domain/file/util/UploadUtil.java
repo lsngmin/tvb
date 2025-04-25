@@ -34,7 +34,7 @@ public class UploadUtil {
         List<String> result = new ArrayList<>();
         for (MultipartFile file : files) {
             log.info("Uploading file: " + file.getOriginalFilename());
-            if(file.getContentType().startsWith("image") == false) {
+            if(!file.getContentType().startsWith("image")) {
                 log.error("File is not an image : {}", file.getContentType());
                 continue;
             }

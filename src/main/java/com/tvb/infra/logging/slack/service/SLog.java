@@ -16,9 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.slack.api.model.Attachment;
-import com.slack.api.model.Field;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
 @Service
@@ -34,28 +31,21 @@ public class SLog {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-            StringBuilder sb = new StringBuilder();
-            sb
-                    .append(":ballot_box_with_check: Log Message").append("\n")
-                    .append("```").append(m).append("```")
-
-                    .append(":white_check_mark: Request URI").append("\n")
-                    .append("```").append(request.getMethod()).append(" - ").append(request.getRequestURI()).append("```")
-                    .append(":white_check_mark: Request ID").append("\n")
-                    .append("```").append(request.getHeader("X-RequestID")).append("```")
-                    .append(":white_check_mark: Request Address").append("\n")
-                    .append("```").append(request.getHeader("X-Forwarded-For")).append("```");
-
-            StringBuilder sb2 = new StringBuilder();
-            sb2
-                    .append("*INFO * - ").append(LocalDateTime.now().format(formatter));
+            String sb = ":ballot_box_with_check: Log Message" + "\n" +
+                    "```" + m + "```" +
+                    ":white_check_mark: Request URI" + "\n" +
+                    "```" + request.getMethod() + " - " + request.getRequestURI() + "```" +
+                    ":white_check_mark: Request ID" + "\n" +
+                    "```" + request.getHeader("X-RequestID") + "```" +
+                    ":white_check_mark: Request Address" + "\n" +
+                    "```" + request.getHeader("X-Forwarded-For") + "```";
 
             WebhookResponse r = slack.send(u, payload(p -> p
                     .attachments(List.of(
                             Attachment.builder()
                                     .fallback("Slack Error Message")
-                                    .pretext(sb2.toString())
-                                    .text(sb.toString())
+                                    .pretext("*INFO * - " + LocalDateTime.now().format(formatter))
+                                    .text(sb)
                                     .color("#36a64f")
                                     .build()
                     ))

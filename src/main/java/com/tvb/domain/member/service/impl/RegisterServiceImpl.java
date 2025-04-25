@@ -1,11 +1,11 @@
 package com.tvb.domain.member.service.impl;
 
-import com.tvb.domain.member.domain.LoginType;
+import com.tvb.domain.member.domain.user.LoginType;
 import com.tvb.domain.member.dto.register.RegisterRequestData;
 import com.tvb.domain.member.dto.register.RegisterResponse;
 import com.tvb.domain.member.domain.Password;
 import com.tvb.domain.member.domain.Profile;
-import com.tvb.domain.member.domain.User;
+import com.tvb.domain.member.domain.user.User;
 import com.tvb.domain.member.exception.DataIntegrityViolationException;
 import com.tvb.domain.member.repository.ProfileRepository;
 import com.tvb.domain.member.repository.UserRepository;

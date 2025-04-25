@@ -21,12 +21,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final SLog sLog;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(HttpServletResponse response, @RequestBody AuthRequest authRequest) {
         log.info("Login request: {}", authRequest);
-        sLog.info("로그인 서비스 로직");
 
         return Optional.ofNullable(authService.makeTokenAndLogin(authRequest))
                 .map(tokenResponse -> Pair.of(

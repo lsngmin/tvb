@@ -1,6 +1,6 @@
 package com.tvb.domain.member.dto.register;
 
-import com.tvb.domain.member.domain.User;
+import com.tvb.domain.member.domain.user.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
