@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterUserRequestData {
-    private String userId;
-    LoginType loginType;
+    @NotNull private String userId;
+    @NotNull String loginType;
 }

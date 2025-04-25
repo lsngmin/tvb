@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterPasswordRequestData {
-    private String password;
+    @NotNull private String password;
     private LocalDateTime updatedAt;
     private User user;
 }

@@ -1,7 +1,6 @@
 package com.tvb.domain.member.logging;
 
 import com.tvb.domain.member.dto.register.RegisterRequestData;
-import com.tvb.domain.member.dto.register.module.RegisterUserRequestData;
 import com.tvb.domain.member.exception.common.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -16,16 +15,23 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Aspect
 @Slf4j
 @Component
-public class LoggingAspect {
+public class ServiceLoggingAspect {
     @Pointcut("execution(* com.tvb.domain.member.service.impl.RegisterServiceImpl.*(..))")
-    public void registerService() {}
+    public void myPointcut() {}
 
-    @AfterThrowing(pointcut = "registerService()", throwing = "ex")
+    @AfterThrowing(pointcut = "myPointcut()", throwing = "ex")
     public void afterThrowing(JoinPoint joinPoint, AuthException ex) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        Object[] args = joinPoint.getArgs();
-        RegisterRequestData registerRequestData = (RegisterRequestData) args[0];
-        String userD_ = registerRequestData.getUser().getUserId();
-        log.warn("\"{} {}\" {} - [{}] {}({})", request.getMethod(), request.getRequestURI(), ex.getErrorCode().getHttpStatus(), ex.getClass().getSimpleName(), ex.getMessage(), userD_);
+        RegisterRequestData registerRequestData = (RegisterRequestData) joinPoint.getArgs()[0];
+
+        log.warn(LoggingUtil.formatMessage(
+                "UserRegistration",
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                request.getMethod(),
+                request.getRequestURI(),
+                ex.getErrorCode().getHttpStatus().value(),
+                LoggingUtil.maskValue(registerRequestData.getUser().getUserId())
+        ));
     }
 }

@@ -4,6 +4,7 @@ import com.tvb.domain.member.dto.register.module.RegisterPasswordRequestData;
 import com.tvb.domain.member.dto.register.module.RegisterProfileRequestData;
 import com.tvb.domain.member.dto.register.module.RegisterUserRequestData;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RegisterRequestData {
-    private RegisterUserRequestData user;
-    private RegisterProfileRequestData profile;
-    private RegisterPasswordRequestData password;
+    @Valid @NotNull private RegisterUserRequestData user;
+    @Valid @NotNull private RegisterProfileRequestData profile;
+    @Valid @NotNull private RegisterPasswordRequestData password;
 }

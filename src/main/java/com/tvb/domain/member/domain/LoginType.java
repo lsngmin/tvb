@@ -20,4 +20,12 @@ public enum LoginType {
         }
         throw new IllegalLoginTypeArgumentException();
     }
+    public static LoginType fromString(String value) {
+        for(LoginType type : LoginType.values()) {
+            if(type.name().equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new IllegalLoginTypeArgumentException();
+    }
 }

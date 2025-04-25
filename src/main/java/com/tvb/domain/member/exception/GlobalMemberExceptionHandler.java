@@ -3,12 +3,22 @@ package com.tvb.domain.member.exception;
 import com.tvb.domain.member.exception.common.AuthException;
 import com.tvb.domain.member.exception.common.ErrorCode;
 import com.tvb.domain.member.exception.common.ErrorMessageMap;
+import com.tvb.domain.member.exception.common.RegisterException;
+import com.tvb.domain.member.exception.register.InvalidFormatException;
+import com.tvb.domain.member.logging.LoggingUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Objects;
+
+@Slf4j
 @RestControllerAdvice
 public class GlobalMemberExceptionHandler {
     @ExceptionHandler(AuthException.class)
@@ -20,27 +30,33 @@ public class GlobalMemberExceptionHandler {
                 )
         );
     }
-    //아래부터 회원가입 예외처리 핸들러 입니다.
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<ErrorMessageMap> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-//        StringBuilder errorMessages = new StringBuilder();
-//        ex.getBindingResult().getAllErrors().forEach(error -> {
-//            errorMessages.append(error.getDefaultMessage()).append(" ");
-//        });
-//        String message = errorMessages.toString().trim();
-//        return ResponseEntity.status(ErrorCode.REQUEST_VALIDATION_ERROR.getHttpStatus()).body(
-//                new ErrorMessageMap(
-//                        ErrorCode.REQUEST_VALIDATION_ERROR.getCode(),
-//                        message.isEmpty() ? ErrorCode.REQUEST_VALIDATION_ERROR.getMessage() : message
-//                )
-//        );
-//    }
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorMessageMap> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        return ResponseEntity.status(ErrorCode.INVALID_LOGINTYPE_ERROR.getHttpStatus()).body(
+
+    @ExceptionHandler(RegisterException.class)
+    public ResponseEntity<ErrorMessageMap> handleAuthException(RegisterException e) {
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(
                 new ErrorMessageMap(
-                        ErrorCode.INVALID_LOGINTYPE_ERROR.getCode(),
-                        ErrorCode.INVALID_LOGINTYPE_ERROR.getMessage()
+                        e.getErrorCode().getCode(),
+                        e.getMessage()
+                )
+        );
+    }
+    //아래부터 회원가입 예외처리 핸들러 입니다.
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    public ResponseEntity<ErrorMessageMap> handleMethodArgumentNotValidException(Exception ex) {
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        log.warn(LoggingUtil.formatMessage(
+                "UserRegistration",
+                ex.getClass().getSimpleName(),
+                ErrorCode.REQUEST_VALIDATION_ERROR.getMessage(),
+                request.getMethod(),
+                request.getRequestURI(),
+                ErrorCode.REQUEST_VALIDATION_ERROR.getHttpStatus().value(),
+               ""
+        ));
+        return ResponseEntity.status(ErrorCode.REQUEST_VALIDATION_ERROR.getHttpStatus()).body(
+                new ErrorMessageMap(
+                        ErrorCode.REQUEST_VALIDATION_ERROR.getCode(),
+                        ErrorCode.REQUEST_VALIDATION_ERROR.getMessage()
                 )
         );
     }

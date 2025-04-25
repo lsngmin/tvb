@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -27,7 +29,7 @@ public class RegisterController {
      * @return HTTP 200 with RegisterResponse on successful registration
      */
     @PostMapping
-    public ResponseEntity<RegisterResponse> registerUser(@RequestBody RegisterRequestData registerRequestData) {
+    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequestData registerRequestData) {
         //RequestData의 유효성 검증 로직입니다.
         validateRequestData.accept(registerRequestData);
         return ResponseEntity.ok(registerService.toRegisterUser(registerRequestData));
@@ -41,21 +43,21 @@ public class RegisterController {
     Predicate<RegisterProfileRequestData> profileValidator = profile ->
             !profile.getNickname().isBlank();
     Predicate<RegisterUserRequestData> loginTypeValidator = user ->
-            user.getLoginType() != null;
+            !user.getLoginType().isBlank();
 
 
     Consumer<RegisterRequestData> validateRequestData = r -> {
         if(!userIdValidator.test(r.getUser())) {
-            throw new InvalidUserIdFormatException();
+            throw InvalidFormatException.forInvalidUserId(r.getUser().getUserId());
         }
         if(!passswordValidator.test(r.getPassword())) {
-            throw new InvalidPasswordFormatException();
+            throw InvalidFormatException.forInvalidPassword(r.getPassword().getPassword());
         }
         if (!profileValidator.test(r.getProfile())) {
-            throw new InvalidNickNameFormatException();
+            throw InvalidFormatException.forInvalidNickName(r.getProfile().getNickname());
         }
         if (!loginTypeValidator.test(r.getUser())) {
-            throw new InvalidLoginTypeFormatException();
+            throw InvalidFormatException.forInvalidLoginType(r.getUser().getLoginType());
         }
     };
 

@@ -1,5 +1,6 @@
 package com.tvb.domain.member.service.impl;
 
+import com.tvb.domain.member.domain.LoginType;
 import com.tvb.domain.member.dto.register.RegisterRequestData;
 import com.tvb.domain.member.dto.register.RegisterResponse;
 import com.tvb.domain.member.dto.register.module.RegisterPasswordRequestData;
@@ -47,7 +48,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         User user = User.builder()
                 .userId(userD_.getUserId())
-                .loginType(userD_.getLoginType())
+                .loginType(LoginType.fromString(userD_.getLoginType()))
                 .build();
 
         userRepository.save(user);
