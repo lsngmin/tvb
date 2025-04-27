@@ -1,8 +1,9 @@
-package com.tvb.domain.member.dto.auth;
+package com.tvb.domain.member.dto.login;
 
 
 import com.tvb.domain.member.domain.Password;
 import com.tvb.domain.member.domain.user.User;
+import com.tvb.domain.member.dto.AuthDTO;
 import lombok.*;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthRequest {
+public class LoginRequest implements AuthDTO {
     private User user;
     private Password password;
 
@@ -26,5 +27,10 @@ public class AuthRequest {
 
     public void changeUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String extractUserID() {
+        return this.user.getUserId();
     }
 }

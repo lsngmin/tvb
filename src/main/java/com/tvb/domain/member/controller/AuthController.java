@@ -1,6 +1,8 @@
 package com.tvb.domain.member.controller;
 
-import com.tvb.domain.member.dto.auth.AuthRequest;
+import com.tvb.annotation.LogContext;
+import com.tvb.domain.member.dto.login.LoginRequest;
+import com.tvb.domain.member.dto.login.LoginResponse;
 import com.tvb.domain.member.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,20 +24,28 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(HttpServletResponse response, @RequestBody AuthRequest authRequest) {
-        log.info("Login request: {}", authRequest);
+    @LogContext(action = "UserAuthentication", detail="UserId")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
 
-        return Optional.ofNullable(authService.makeTokenAndLogin(authRequest))
-                .map(tokenResponse -> Pair.of(
-                        authService.storeRefreshTokenInCookie(tokenResponse.get("refreshToken")),
-                        tokenResponse.get("accessToken")
-                ))
-                .map(pair -> {
-                    response.addCookie(pair.getFirst());
-                    return ResponseEntity.ok(Map.of("accessToken", pair.getSecond()));
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
+        Map<String, String> token = authService.makeTokenAndLogin(loginRequest);
+        response.addCookie(authService.storeRefreshTokenInCookie(token.get("refreshToken")));
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setAccessToken(token.get("accessToken"));
+        loginResponse.setUserId(token.get("userId"));
+        return ResponseEntity.ok(loginResponse);
+
+//        return Optional.ofNullable(authService.makeTokenAndLogin(loginRequest))
+//                .map(tokenResponse -> Pair.of(
+//                        authService.storeRefreshTokenInCookie(tokenResponse.get("refreshToken")),
+//                        tokenResponse.get("accessToken")
+//                ))
+//                .map(pair -> {
+//                    response.addCookie(pair.getFirst());
+//                    return ResponseEntity.ok(Map.of("accessToken", pair.getSecond()));
+//                })
+//                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
     }
+
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestHeader(value = "Authorization", required = false) String accessToken,
                                      @CookieValue(name = "refreshToken", required = false) String refreshToken,
@@ -45,8 +55,8 @@ public class AuthController {
             return ResponseEntity.ok().build();
         }
         Map<String, String> map = authService.RefreshToken(accessToken, refreshToken);
-        log.info("Refresh token: {}", map.get("refreshToken"));
-        log.info("Access token: {}", map.get("accessToken"));
+//        log.info("Refresh token: {}", map.get("refreshToken"));
+//        log.info("Access token: {}", map.get("accessToken"));
         response.addCookie(authService.storeRefreshTokenInCookie(map.get("refreshToken")));
         return ResponseEntity.ok(Map.of("accessToken", map.get("accessToken")));
     }
@@ -54,8 +64,8 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String accessToken,
                                 @CookieValue(name = "refreshToken", required = false) String refreshToken) {
-        log.info("Access token: {}", accessToken);
-        log.info("Refresh token: {}", refreshToken);
+//        log.info("Access token: {}", accessToken);
+//        log.info("Refresh token: {}", refreshToken);
 
 
         if (accessToken == null || accessToken.isBlank()) {

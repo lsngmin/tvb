@@ -1,6 +1,6 @@
 package com.tvb.domain.member.service.oauth2;
 
-import com.tvb.domain.member.dto.auth.AuthRequest;
+import com.tvb.domain.member.dto.login.LoginRequest;
 import com.tvb.domain.member.domain.user.User;
 import com.tvb.domain.member.repository.SocialLoginRepository;
 import com.tvb.security.jwt.util.JWTUtil;
@@ -41,7 +41,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             log.info("User found. userId={}, socialEmail={}", user.get().getUserId(), socialId);
 
             String refreshToken = jwtUtil.createToken(
-                    AuthRequest.builder()
+                    LoginRequest.builder()
                             .user(user.get())
                             .build().getDataMap(),
                     600);

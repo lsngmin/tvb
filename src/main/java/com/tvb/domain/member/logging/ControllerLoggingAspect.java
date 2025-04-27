@@ -1,9 +1,12 @@
 package com.tvb.domain.member.logging;
 
-import com.tvb.domain.member.dto.register.RegisterRequestData;
+import com.tvb.annotation.LogContext;
+import com.tvb.domain.member.dto.AuthDTO;
 import com.tvb.domain.member.dto.register.RegisterResponse;
 import com.tvb.domain.member.exception.register.RegisterException;
 import com.tvb.domain.member.exception.register.InvalidFormatException;
+import com.tvb.domain.member.logging.util.LogFactory;
+import com.tvb.domain.member.logging.util.LogStatus;
 import com.tvb.domain.member.logging.util.LoggingUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,47 +23,35 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Aspect
 @RequiredArgsConstructor
 public class ControllerLoggingAspect  {
-    private final LoggingUtil loggingUtil;
+    private final LogFactory logFactory;
 
-    @Pointcut("execution(* com.tvb.domain.member.controller.RegisterController.*(..))")
-    public void myPointcut() {}
-
-    @AfterThrowing(pointcut = "myPointcut()", throwing = "ex")
-    public void afterThrowing(RegisterException ex) {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-            log.warn(loggingUtil.formatMessage(
-                    "UserRegistration",
-                    ex.getClass().getSimpleName(),
-                    ex.getMessage(),
-                    request.getMethod(),
-                    request.getRequestURI(),
-                    ex.getErrorCode().getHttpStatus().value(),
-                    loggingUtil.maskValue(((InvalidFormatException) ex).getRejectedValue())
-            ));
-    }
-    @AfterReturning(pointcut = "myPointcut()", returning = "response")
-    public void afterReturning(ResponseEntity<RegisterResponse> response) {
+    @Before("@annotation(logContext)")
+    public void before(JoinPoint joinPoint, LogContext logContext) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
-        log.info(loggingUtil.formatMessage(
-                "UserRegistration", "RequestCompleted", "Email",
-                request.getMethod(),
-                request.getRequestURI(),
-                response.getStatusCode().value(),
-                loggingUtil.maskValue(response.getBody().getUserId())
-        ));
-    }
-    @Before("myPointcut()")
-    public void before(JoinPoint joinPoint) {
-        RegisterRequestData requestData = (RegisterRequestData) joinPoint.getArgs()[0];
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        AuthDTO authDTO = (AuthDTO) joinPoint.getArgs()[0];
+        String userId = authDTO.extractUserID();
 
-        log.info(loggingUtil.formatMessage(
-                "UserRegistration", "RequestReceived", "Email",
-                request.getMethod(),
-                request.getRequestURI(),
-                "",
-                loggingUtil.maskValue(requestData.getUser().getUserId())
-        ));
+        String className = joinPoint.getTarget().getClass().getSimpleName();
+
+        log.info(logFactory.of(request, logContext, className).status(LogStatus.PENDING).value(userId).build());
+    }
+
+    @AfterReturning(pointcut = "@annotation(logContext)", returning = "response")
+    public void afterReturning(JoinPoint joinPoint, LogContext logContext, ResponseEntity<? extends AuthDTO> response) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String className = joinPoint.getTarget().getClass().getSimpleName();
+
+        String userId = response.getBody().extractUserID();
+
+        log.info(logFactory.of(request, response, logContext, className).status(LogStatus.OK).value(userId).build());
+    }
+
+    @AfterThrowing(pointcut = "@annotation(logContext)", throwing = "ex")
+    public void afterThrowing(JoinPoint joinPoint, RegisterException ex, LogContext logContext) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String className = joinPoint.getTarget().getClass().getSimpleName();
+
+        log.warn(logFactory.of(request, ex, logContext, className).status(ex.getErrorCode()).value(ex.getValue()).build());
     }
 }

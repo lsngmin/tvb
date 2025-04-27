@@ -1,6 +1,6 @@
 package com.tvb.domain.member.logging;
 
-import com.tvb.domain.member.dto.register.RegisterRequestData;
+import com.tvb.domain.member.dto.register.RegisterRequest;
 import com.tvb.domain.member.exception.auth.AuthException;
 import com.tvb.domain.member.logging.util.LoggingUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class ServiceLoggingAspect {
     @AfterThrowing(pointcut = "myPointcut()", throwing = "ex")
     public void afterThrowing(JoinPoint joinPoint, AuthException ex) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        RegisterRequestData registerRequestData = (RegisterRequestData) joinPoint.getArgs()[0];
+        RegisterRequest registerRequestData = (RegisterRequest) joinPoint.getArgs()[0];
 
         log.warn(loggingUtil.formatMessage(
                 "UserRegistration",

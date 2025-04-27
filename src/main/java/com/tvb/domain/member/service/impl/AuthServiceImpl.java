@@ -1,6 +1,6 @@
 package com.tvb.domain.member.service.impl;
 
-import com.tvb.domain.member.dto.auth.AuthRequest;
+import com.tvb.domain.member.dto.login.LoginRequest;
 import com.tvb.domain.member.domain.user.User;
 import com.tvb.domain.member.exception.InvalidAuthorizationHeaderException;
 import com.tvb.domain.member.exception.InvalidCredentialsException;
@@ -26,9 +26,9 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordRepository passwordRepository;
 
     @Override
-    public Map<String, String> makeTokenAndLogin(AuthRequest authRequest) {
-
-        Optional<User> user = userRepository.findByUserId(authRequest.getUser().getUserId());
+    public Map<String, String> makeTokenAndLogin(LoginRequest loginRequest) {
+        String userId = loginRequest.getUser().getUserId();
+        Optional<User> user = userRepository.findByUserId(userId);
 
         Optional<String> password = passwordRepository.findPasswordByUser(
                 user.orElseThrow(InvalidCredentialsException::new
@@ -36,12 +36,12 @@ public class AuthServiceImpl implements AuthService {
 
         if (password.isPresent() &&
                 passwordEncoder.matches(
-                        authRequest.getPassword().getPassword(), password.get())) {
-            authRequest.changeUser(user.get());
-            Map<String, String> dataMap = authRequest.getDataMap();
+                        loginRequest.getPassword().getPassword(), password.get())) {
+            loginRequest.changeUser(user.get());
+            Map<String, String> dataMap = loginRequest.getDataMap();
             String accessToken = jwtUtil.createToken(dataMap, 1);
             String refreshToken = jwtUtil.createToken(dataMap, 9999999);
-            return Map.of("accessToken", accessToken, "refreshToken",refreshToken);
+            return Map.of("accessToken", accessToken, "refreshToken",refreshToken, "userId", userId);
         }
         throw new InvalidCredentialsException();
     }

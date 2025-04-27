@@ -1,5 +1,7 @@
 package com.tvb.domain.member.controller;
 
+import com.tvb.annotation.LogContext;
+import com.tvb.domain.member.dto.AuthDTO;
 import com.tvb.domain.member.dto.register.*;
 import com.tvb.domain.member.exception.register.*;
 import com.tvb.domain.member.service.RegisterService;
@@ -27,24 +29,25 @@ public class RegisterController {
      * @return HTTP 200 with RegisterResponse on successful registration
      */
     @PostMapping
-    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequestData registerRequestData) {
+    @LogContext(action = "UserRegistration", detail="UserId")
+    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequestData) {
         //RequestData의 유효성 검증 로직입니다.
         validateRequestData.accept(registerRequestData);
         return ResponseEntity.ok(registerService.toRegisterUser(registerRequestData));
     }
 
-    Predicate<RegisterRequestData.PasswordRequestData> passswordValidator = pwd ->
+    Predicate<RegisterRequest.PasswordRequestData> passswordValidator = pwd ->
             pwd.getPassword().matches("^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}\\[\\]:\";'<>?,./]).{8,20}$");
-    Predicate<RegisterRequestData.UserRequestData> userIdValidator = user ->
+    Predicate<RegisterRequest.UserRequestData> userIdValidator = user ->
         !user.getUserId().isBlank() &&
                 user.getUserId().matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
-    Predicate<RegisterRequestData.ProfileRequestData> profileValidator = profile ->
+    Predicate<RegisterRequest.ProfileRequestData> profileValidator = profile ->
             !profile.getNickname().isBlank();
-    Predicate<RegisterRequestData.UserRequestData> loginTypeValidator = user ->
+    Predicate<RegisterRequest.UserRequestData> loginTypeValidator = user ->
             !user.getLoginType().isBlank();
 
 
-    Consumer<RegisterRequestData> validateRequestData = r -> {
+    Consumer<RegisterRequest> validateRequestData = r -> {
         if(!userIdValidator.test(r.getUser())) {
             throw InvalidFormatException.forInvalidUserId(r.getUser().getUserId());
         }

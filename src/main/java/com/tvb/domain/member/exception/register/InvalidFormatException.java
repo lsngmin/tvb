@@ -5,11 +5,6 @@ import com.tvb.domain.member.exception.common.ErrorCode;
 import static com.tvb.domain.member.exception.common.ErrorCode.*;
 
 public class InvalidFormatException extends RegisterException {
-    private final String rejectedValue;
-    public String getRejectedValue() {
-        return rejectedValue;
-    }
-
     public static InvalidFormatException forInvalidNickName(String n) {
         return new InvalidFormatException(INVALID_NICKNAME_ERROR, n);
     }
@@ -24,11 +19,9 @@ public class InvalidFormatException extends RegisterException {
     }
 
     public InvalidFormatException(ErrorCode e, String o) {
-        super(e);
-        this.rejectedValue = o;
+        super(e, o);
     }
     public InvalidFormatException() {
-        super(ErrorCode.REQUEST_VALIDATION_ERROR);
-        this.rejectedValue = "";
+        super(ErrorCode.REQUEST_VALIDATION_ERROR, "");
     }
 }

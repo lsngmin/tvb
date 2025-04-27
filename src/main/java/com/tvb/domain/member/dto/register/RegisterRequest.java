@@ -1,6 +1,7 @@
 package com.tvb.domain.member.dto.register;
 
 import com.tvb.domain.member.domain.user.User;
+import com.tvb.domain.member.dto.AuthDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,10 +15,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterRequestData {
+public class RegisterRequest implements AuthDTO {
     @Valid @NotNull private UserRequestData user;
     @Valid @NotNull private ProfileRequestData profile;
     @Valid @NotNull private PasswordRequestData password;
+
+    @Override
+    public String extractUserID() {
+        return this.user.getUserId();
+    }
 
     @Builder
     @Getter
