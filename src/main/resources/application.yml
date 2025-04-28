@@ -41,4 +41,20 @@ git-hub:
 logging:
   slack:
     config: classpath:logback-spring.xml
-    webhook-uri: ${SLACK_WEBHOOK_URI}
+    webhook-uri: https://hooks.slack.com/services/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
+
+springdoc:
+  packages-to-scan: com.gravifox
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  cache:
+    disabled: true
+  swagger-ui:
+    enabled: true
+    path: /docs/openapi.html
+
+  api-docs:
+    path: /docs
+    groups:
+      enabled: false
+

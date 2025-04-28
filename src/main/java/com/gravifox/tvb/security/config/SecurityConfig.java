@@ -64,7 +64,6 @@ public class SecurityConfig {
                         )
                         .successHandler(oAuth2UserSuccessHandler)
         );
-
         return http.build();
     }
 

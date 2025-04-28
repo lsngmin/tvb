@@ -19,9 +19,11 @@ public class DurationInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        if (!(handler instanceof HandlerMethod)) {
+            return;
+        }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         String className = handlerMethod.getBeanType().getSimpleName();
-
         Long startTime = (Long) request.getAttribute(START_TIME);
         long endTime = System.currentTimeMillis();
         String duration = (endTime - startTime) + "ms";
