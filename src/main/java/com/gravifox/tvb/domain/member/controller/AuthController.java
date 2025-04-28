@@ -54,7 +54,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/refresh")
-    @LogContext(action = "UserTokenRefresh", detail="UserId")
+    @LogContext(action = "UserTokenRefresh", detail="ONLY REFRESH NOT AUTHENTICATION!")
     public ResponseEntity<?> refresh(@RequestHeader(value = "Authorization", required = false) String accessToken,
                                      @CookieValue(name = "refreshToken", required = false) String refreshToken,
                                      HttpServletResponse response) {

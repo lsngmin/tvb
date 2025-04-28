@@ -28,10 +28,11 @@ public class ControllerLoggingAspect  {
     @Before("myPointcut(logContext)")
     public void before(JoinPoint joinPoint, LogContext logContext) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        AuthDTO authDTO = (AuthDTO) joinPoint.getArgs()[0];
-        String userId = authDTO.extractUserID();
-
+        String userId = "";
+        if(!logContext.action().equals("UserTokenRefresh")) {
+            AuthDTO authDTO = (AuthDTO) joinPoint.getArgs()[0];
+            userId = authDTO.extractUserID();
+        }
         String className = joinPoint.getTarget().getClass().getSimpleName();
 
         log.info(logFactory.of(request, logContext, className).status(LogStatus.PENDING).value(userId).build());
