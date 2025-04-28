@@ -29,7 +29,7 @@
 <!--        <appender-ref ref="ASPECT_LOGGING"/>-->
 <!--    </logger>-->
 
-    <logger name = "com.tvb.Application" level="INFO"/>
+    <logger name = "com.gravifox.tvb.Application" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="ASPECT_LOGGING"/>
