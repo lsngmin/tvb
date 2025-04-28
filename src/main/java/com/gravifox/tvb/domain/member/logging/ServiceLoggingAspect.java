@@ -1,8 +1,11 @@
 package com.gravifox.tvb.domain.member.logging;
 
+import com.gravifox.tvb.annotation.LogContext;
 import com.gravifox.tvb.domain.member.dto.register.RegisterRequest;
 import com.gravifox.tvb.domain.member.exception.auth.AuthException;
-import com.gravifox.tvb.domain.member.logging.util.LoggingUtil;
+import com.gravifox.tvb.logging.util.LogFactory;
+import com.gravifox.tvb.logging.util.LogStatus;
+import com.gravifox.tvb.logging.util.LogUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,24 +22,26 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 @RequiredArgsConstructor
 public class ServiceLoggingAspect {
-    private final LoggingUtil loggingUtil;
+    private final LogFactory logFactory;
 
-    @Pointcut("execution(* com.gravifox.tvb.domain.member.service.impl.RegisterServiceImpl.*(..))")
-    public void myPointcut() {}
+    @Pointcut("execution(* com.gravifox.tvb.domain.member.service.impl.*.*(..)) && @annotation(logContext)")
+    public void myPointcut(LogContext logContext) {}
 
-    @AfterThrowing(pointcut = "myPointcut()", throwing = "ex")
-    public void afterThrowing(JoinPoint joinPoint, AuthException ex) {
+    @AfterThrowing(pointcut = "myPointcut(logContext)", throwing = "ex")
+    public void afterThrowing(JoinPoint joinPoint, AuthException ex, LogContext logContext) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        RegisterRequest registerRequestData = (RegisterRequest) joinPoint.getArgs()[0];
+        String className = joinPoint.getTarget().getClass().getSimpleName();
 
-        log.warn(loggingUtil.formatMessage(
-                "UserRegistration",
-                ex.getClass().getSimpleName(),
-                ex.getMessage(),
-                request.getMethod(),
-                request.getRequestURI(),
-                ex.getErrorCode().getHttpStatus().value(),
-                loggingUtil.maskValue(registerRequestData.getUser().getUserId())
-        ));
+        log.warn(logFactory.of(request, ex, logContext, className).status(ex.getErrorCode()).value(ex.getValue()).build());
+
+//        log.warn(logUtil.formatMessage(
+//                "UserRegistration",
+//                ex.getClass().getSimpleName(),
+//                ex.getMessage(),
+//                request.getMethod(),
+//                request.getRequestURI(),
+//                ex.getErrorCode().getHttpStatus().value(),
+//                logUtil.maskValue(registerRequestData.getUser().getUserId())
+//        ));
     }
 }

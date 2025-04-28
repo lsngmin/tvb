@@ -1,4 +1,4 @@
-package com.gravifox.tvb.domain.member.logging.util;
+package com.gravifox.tvb.logging.util;
 
 import com.gravifox.tvb.logging.SLog;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LoggingUtil {
+public class LogUtil {
     private final SLog sLog;
 
     /**

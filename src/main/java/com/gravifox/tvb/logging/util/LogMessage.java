@@ -1,10 +1,10 @@
-package com.gravifox.tvb.domain.member.logging.util;
+package com.gravifox.tvb.logging.util;
 
 import lombok.Builder;
 
 @Builder
 public class LogMessage {
-    private LoggingUtil loggingUtil;
+    private LogUtil logUtil;
 
     private String className;
     private String action;

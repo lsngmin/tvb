@@ -43,17 +43,25 @@ public class AuthController {
 //                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
     }
 
+    /**
+     *
+     * 왜 토큰 파라미터의 required 가 false인가요 ? - true로 설정할 경우 토큰이 없으면 400 Bad Request를 반환하게 됩니다.
+     *  하지만 이 경우에도 요청을 수용하여 200 OK를 반환함으로 UX를 저해하지 않고 부드럽게 처리할 수 있습니다.
+     *
+     * @param accessToken
+     * @param refreshToken
+     * @param response
+     * @return
+     */
     @PostMapping("/refresh")
+    @LogContext(action = "UserTokenRefresh", detail="UserId")
     public ResponseEntity<?> refresh(@RequestHeader(value = "Authorization", required = false) String accessToken,
                                      @CookieValue(name = "refreshToken", required = false) String refreshToken,
                                      HttpServletResponse response) {
         if(refreshToken == null) {
-            log.info("Not Found Refresh Token or Unauthorized User");
             return ResponseEntity.ok().build();
         }
         Map<String, String> map = authService.RefreshToken(accessToken, refreshToken);
-//        log.info("Refresh token: {}", map.get("refreshToken"));
-//        log.info("Access token: {}", map.get("accessToken"));
         response.addCookie(authService.storeRefreshTokenInCookie(map.get("refreshToken")));
         return ResponseEntity.ok(Map.of("accessToken", map.get("accessToken")));
     }

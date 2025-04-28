@@ -1,5 +1,6 @@
 package com.gravifox.tvb.domain.member.service.impl;
 
+import com.gravifox.tvb.annotation.LogContext;
 import com.gravifox.tvb.domain.member.dto.login.LoginRequest;
 import com.gravifox.tvb.domain.member.domain.user.User;
 import com.gravifox.tvb.domain.member.exception.InvalidAuthorizationHeaderException;
@@ -25,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final PasswordRepository passwordRepository;
 
-    @Override
+    @Override @LogContext(action = "UserAuthentication", detail = "UserId")
     public Map<String, String> makeTokenAndLogin(LoginRequest loginRequest) {
         String userId = loginRequest.getUser().getUserId();
         Optional<User> user = userRepository.findByUserId(userId);
@@ -43,10 +44,19 @@ public class AuthServiceImpl implements AuthService {
             String refreshToken = jwtUtil.createToken(dataMap, 9999999);
             return Map.of("accessToken", accessToken, "refreshToken",refreshToken, "userId", userId);
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidCredentialsException(userId);
     }
 
-    @Override
+    /**
+     * AccessToken이 만료되었거나 새로고침으로 없어졌을 때 재발급을 위한 엔드포인트입니다.
+     *
+     * @param accessToken - 없어도 됩니다. 만약 없다면 리프레시 토큰으로 makeNewToken()을 호출합니다.
+     *                    있다면 해당 토큰을 검증합니다. 성공하면 가지고 있는 토큰을 반환합니다. 실패하면 리프레시 토큰으로 AccessToken을 재발급합니다.
+     *                    그 외에 에러는 런타임 에러를 던집니다.
+     * @param refreshToken - 필수적으로 있어야 합니다. 없다면 에러를 반환합니다.
+     * @return - Map 형태로 AccessToken , RefreshToken을 가지고 있습니다.
+     */
+    @Override @LogContext(action = "TokenRefresh", detail = "UserId")
     public Map<String, String> RefreshToken(String accessToken, String refreshToken) {
         if(accessToken != null && !accessToken.isBlank()) {
             accessToken = Optional.of(accessToken)
@@ -55,10 +65,8 @@ public class AuthServiceImpl implements AuthService {
                     .orElseThrow(InvalidAuthorizationHeaderException::new);
             try {
                 jwtUtil.validateToken(accessToken);
-                log.info("Token validation successful.");
                 return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
             } catch (io.jsonwebtoken.ExpiredJwtException expiredJwtException) {
-                log.info("Access token expired.");
                 return makeNewToken(refreshToken);
             } catch (Exception e) {
                 //TODO: throw error 변경 필요
@@ -88,13 +96,9 @@ public class AuthServiceImpl implements AuthService {
             Map<String, Object> claims = jwtUtil.validateToken(refreshToken);
             Map<String, String> dataMap = Map.of("userId", String.valueOf(claims.get("userId")), "userNo", String.valueOf(claims.get("userNo")));
 
-            log.info("claims: {}", claims);
-
             String newAccessToken = jwtUtil.createToken(dataMap, 999);
             String newRefreshToken = jwtUtil.createToken(dataMap, 999);
 
             return Map.of("accessToken", newAccessToken, "refreshToken", newRefreshToken);
     }
-
-
 }

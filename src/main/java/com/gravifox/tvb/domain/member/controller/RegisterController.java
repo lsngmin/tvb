@@ -4,8 +4,6 @@ import com.gravifox.tvb.annotation.LogContext;
 import com.gravifox.tvb.domain.member.dto.register.RegisterRequest;
 import com.gravifox.tvb.domain.member.dto.register.RegisterResponse;
 import com.gravifox.tvb.domain.member.exception.register.InvalidFormatException;
-import com.tvb.domain.member.dto.register.*;
-import com.tvb.domain.member.exception.register.*;
 import com.gravifox.tvb.domain.member.service.RegisterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

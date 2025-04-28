@@ -3,8 +3,8 @@ package com.gravifox.tvb.domain.member.logging;
 import com.gravifox.tvb.annotation.LogContext;
 import com.gravifox.tvb.domain.member.dto.AuthDTO;
 import com.gravifox.tvb.domain.member.exception.register.RegisterException;
-import com.gravifox.tvb.domain.member.logging.util.LogFactory;
-import com.gravifox.tvb.domain.member.logging.util.LogStatus;
+import com.gravifox.tvb.logging.util.LogFactory;
+import com.gravifox.tvb.logging.util.LogStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class ControllerLoggingAspect  {
     private final LogFactory logFactory;
 
-    @Before("@annotation(logContext)")
+    @Pointcut("execution(* com.gravifox.tvb.domain.member.controller.*.*(..)) && @annotation(logContext)")
+    public void myPointcut(LogContext logContext) {}
+
+    @Before("myPointcut(logContext)")
     public void before(JoinPoint joinPoint, LogContext logContext) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
@@ -34,7 +37,7 @@ public class ControllerLoggingAspect  {
         log.info(logFactory.of(request, logContext, className).status(LogStatus.PENDING).value(userId).build());
     }
 
-    @AfterReturning(pointcut = "@annotation(logContext)", returning = "response")
+    @AfterReturning(pointcut = "myPointcut(logContext)", returning = "response")
     public void afterReturning(JoinPoint joinPoint, LogContext logContext, ResponseEntity<? extends AuthDTO> response) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String className = joinPoint.getTarget().getClass().getSimpleName();
@@ -44,7 +47,7 @@ public class ControllerLoggingAspect  {
         log.info(logFactory.of(request, response, logContext, className).status(LogStatus.OK).value(userId).build());
     }
 
-    @AfterThrowing(pointcut = "@annotation(logContext)", throwing = "ex")
+    @AfterThrowing(pointcut = "myPointcut(logContext)", throwing = "ex")
     public void afterThrowing(JoinPoint joinPoint, RegisterException ex, LogContext logContext) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String className = joinPoint.getTarget().getClass().getSimpleName();

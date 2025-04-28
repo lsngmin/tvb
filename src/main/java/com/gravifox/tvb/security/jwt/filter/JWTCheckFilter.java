@@ -46,7 +46,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         try {
             java.util.Map<String, Object> tokenMap = jwtUtil.validateToken(accessToken);
             java.util.Map<String, Object> rTokenMap = jwtUtil.validateToken(accessToken);
-            log.info("JWT validation successful. Token data: {}", tokenMap);
             String userNo = rTokenMap.get("userNo").toString();
 
             //TODO : roles라는 역할이 추가될 때 마찬가지로 roles를 받아오는 코드 추가 필요

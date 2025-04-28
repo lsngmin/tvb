@@ -1,4 +1,4 @@
-package com.gravifox.tvb.domain.member.logging.util;
+package com.gravifox.tvb.logging.util;
 
 import com.gravifox.tvb.annotation.LogContext;
 import com.gravifox.tvb.domain.member.exception.common.ErrorCode;
@@ -11,47 +11,48 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LogFactory {
-    private final LoggingUtil loggingUtil;
+    private final LogUtil logUtil;
 
     @Autowired
-    public LogFactory(LoggingUtil loggingUtil) {
-        this.loggingUtil = loggingUtil;
+    public LogFactory(LogUtil logUtil) {
+        this.logUtil = logUtil;
     }
 
     public LogBuilder of(HttpServletRequest request, LogContext logContext, String className) {
-        return new LogBuilder(request, (ResponseEntity<?>) null, logContext, className, loggingUtil);
+        return new LogBuilder(request, (ResponseEntity<?>) null, logContext, className, logUtil);
     }
     public LogBuilder of(HttpServletRequest request, ResponseEntity<?> response, LogContext logContext, String className) {
-        return new LogBuilder(request, response, logContext, className, loggingUtil);
+        return new LogBuilder(request, response, logContext, className, logUtil);
     }
     public LogBuilder of(HttpServletRequest request, GlobalException ex, LogContext logContext, String className) {
-        return new LogBuilder(request, ex, logContext, className, loggingUtil);
+        return new LogBuilder(request, ex, logContext, className, logUtil);
     }
-    public LogBuilder of(HttpServletRequest request, HttpServletResponse response, String className) {
-        return new LogBuilder(request, response, className, loggingUtil);
+    public LogBuilder of(HttpServletRequest request, HttpServletResponse response, String className, String duration) {
+        return new LogBuilder(request, response, className, duration, logUtil);
     }
 
     public static class LogBuilder {
         private final LogMessage.LogMessageBuilder builder;
-        private final LoggingUtil loggingUtil;
+        private final LogUtil logUtil;
 
-        public LogBuilder(HttpServletRequest request, HttpServletResponse response, String className, LoggingUtil loggingUtil) {
+        public LogBuilder(HttpServletRequest request, HttpServletResponse response, String className, String duration, LogUtil logUtil) {
             String statusCode = response != null ? Integer.toString(response.getStatus()) : "";
 
             this.builder = LogMessage.builder()
                     .method(request.getMethod())
                     .uri(request.getRequestURI())
                     .code(statusCode)
-                    .className(className);
+                    .className(className)
+                    .value(duration);
 
-            this.loggingUtil = loggingUtil;
+            this.logUtil = logUtil;
         }
 
         public LogBuilder(HttpServletRequest request,
                           GlobalException e,
                           LogContext logContext,
                           String className,
-                          LoggingUtil loggingUtil) {
+                          LogUtil logUtil) {
 
             this.builder = LogMessage.builder()
                     .method(request.getMethod())
@@ -59,10 +60,10 @@ public class LogFactory {
                     .code(Integer.toString(e.getErrorCode().getHttpStatus().value()))
                     .action(logContext.action())
                     .status(logContext.status())
-                    .detail(e.getClass().getSimpleName())
+                    .detail(e.getMessage())
                     .className(className);
 
-            this.loggingUtil = loggingUtil;
+            this.logUtil = logUtil;
 
         }
 
@@ -70,7 +71,7 @@ public class LogFactory {
                           ResponseEntity<?> response,
                           LogContext logContext,
                           String className,
-                          LoggingUtil loggingUtil) {
+                          LogUtil logUtil) {
             String statusCode = response != null ? Integer.toString(response.getStatusCode().value()) : "";
 
             this.builder = LogMessage.builder()
@@ -81,7 +82,7 @@ public class LogFactory {
                     .status(logContext.status())
                     .detail(logContext.detail())
                     .className(className);
-            this.loggingUtil = loggingUtil;
+            this.logUtil = logUtil;
         }
 
         public LogBuilder className(String c) {builder.className(c); return this;}
@@ -100,7 +101,7 @@ public class LogFactory {
         }
 
         private String mask(String v) {
-            return loggingUtil.maskValue(v);
+            return logUtil.maskValue(v);
         }
     }
 }

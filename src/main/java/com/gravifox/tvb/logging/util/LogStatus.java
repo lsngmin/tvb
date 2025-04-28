@@ -1,4 +1,4 @@
-package com.gravifox.tvb.domain.member.logging.util;
+package com.gravifox.tvb.logging.util;
 
 public enum LogStatus {
     OK("SUCCESS"),

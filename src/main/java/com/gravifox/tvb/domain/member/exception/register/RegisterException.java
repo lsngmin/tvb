@@ -8,8 +8,12 @@ import lombok.Getter;
 public class RegisterException extends GlobalException {
   private final ErrorCode errorCode;
 
-  public RegisterException(ErrorCode errorCode, String rejectedValue) {
-    super(errorCode, rejectedValue);
-    this.errorCode = errorCode;
+  public RegisterException(ErrorCode e) {
+    super(e);
+    this.errorCode = e;
+  }
+  public RegisterException(ErrorCode e, String o) {
+    super(e, o);
+    this.errorCode = e;
   }
 }

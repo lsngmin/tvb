@@ -4,7 +4,7 @@ import com.gravifox.tvb.domain.member.exception.auth.AuthException;
 import com.gravifox.tvb.domain.member.exception.common.ErrorCode;
 import com.gravifox.tvb.domain.member.exception.common.ErrorMessageMap;
 import com.gravifox.tvb.domain.member.exception.register.RegisterException;
-import com.gravifox.tvb.domain.member.logging.util.LoggingUtil;
+import com.gravifox.tvb.logging.util.LogUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.Objects;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalMemberExceptionHandler {
-    private final LoggingUtil loggingUtil;
+    private final LogUtil logUtil;
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ErrorMessageMap> handleAuthException(AuthException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(
@@ -46,7 +46,7 @@ public class GlobalMemberExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorMessageMap> handleMethodArgumentNotValidException(Exception ex) {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        log.warn(loggingUtil.formatMessage(
+        log.warn(logUtil.formatMessage(
                 "UserRegistration",
                 ex.getClass().getSimpleName(),
                 ErrorCode.REQUEST_VALIDATION_ERROR.getMessage(),

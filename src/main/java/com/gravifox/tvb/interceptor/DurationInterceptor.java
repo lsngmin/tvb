@@ -1,7 +1,7 @@
 package com.gravifox.tvb.interceptor;
 
-import com.gravifox.tvb.domain.member.logging.util.LogFactory;
-import com.gravifox.tvb.domain.member.logging.util.LogStatus;
+import com.gravifox.tvb.logging.util.LogFactory;
+import com.gravifox.tvb.logging.util.LogStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +24,13 @@ public class DurationInterceptor implements HandlerInterceptor {
 
         Long startTime = (Long) request.getAttribute(START_TIME);
         long endTime = System.currentTimeMillis();
-        String duration = "Duration: " + (endTime - startTime) + "ms";
-
-        log.info(logFactory.of(request, response, className)
-                .action("RequestDuration")
-                .status(LogStatus.OK)
-                        .detail(duration)
-                .build());
+        String duration = (endTime - startTime) + "ms";
+//fixme duration을 기존 로그 출력문에 이어붙히는 리팩토링 필요
+//        log.info(logFactory.of(request, response, className, duration)
+//                .action("RequestDuration")
+//                .status(LogStatus.OK)
+//                .detail("Duration")
+//                .build());
     }
 
     @Override

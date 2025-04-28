@@ -7,4 +7,8 @@ public class InvalidCredentialsException extends AuthException {
     public InvalidCredentialsException() {
         super(ErrorCode.INVALID_CREDENTIALS);
     }
+    public InvalidCredentialsException(String o) {
+        super(ErrorCode.INVALID_CREDENTIALS,o);
+    }
+
 }

@@ -61,10 +61,8 @@ public class JWTUtil {
         try {
             SecretKey key = getSecretKey();
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
-            log.info("JWT validated successfully");
             return true;
         } catch (Exception e) {
-            log.error(e.getMessage());
             return false;
         }
     };

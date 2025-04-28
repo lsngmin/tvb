@@ -1,12 +1,13 @@
 package com.gravifox.tvb.domain.member.service.impl;
 
+import com.gravifox.tvb.annotation.LogContext;
 import com.gravifox.tvb.domain.member.domain.user.LoginType;
 import com.gravifox.tvb.domain.member.dto.register.RegisterRequest;
 import com.gravifox.tvb.domain.member.dto.register.RegisterResponse;
 import com.gravifox.tvb.domain.member.domain.Password;
 import com.gravifox.tvb.domain.member.domain.Profile;
 import com.gravifox.tvb.domain.member.domain.user.User;
-import com.gravifox.tvb.domain.member.exception.DataIntegrityViolationException;
+import com.gravifox.tvb.domain.member.exception.register.DataIntegrityViolationException;
 import com.gravifox.tvb.domain.member.repository.ProfileRepository;
 import com.gravifox.tvb.domain.member.repository.UserRepository;
 import com.gravifox.tvb.domain.member.repository.PasswordRepository;
@@ -30,13 +31,14 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     @Transactional
+    @LogContext(action = "UserRegistration", detail="UserId")
     public RegisterResponse toRegisterUser(RegisterRequest registerRequestData) {
         RegisterRequest.UserRequestData userD_ = registerRequestData.getUser();
         RegisterRequest.ProfileRequestData profileD_ = registerRequestData.getProfile();
         RegisterRequest.PasswordRequestData passwordD_ = registerRequestData.getPassword();
 
         userRepository.findByUserId(userD_.getUserId()).ifPresent(user -> {
-            throw DataIntegrityViolationException.forDuplicateUserId();
+            throw DataIntegrityViolationException.forDuplicateUserId(userD_.getUserId());
         });
         profileRepository.findByNickname(profileD_.getNickname()).ifPresent(profile -> {
             //todo 지금은 프론트엔드에서 닉네임 적는 곳이 없어 랜덤 값이 들어가지만 차후 닉네임이 설정되면 예외처리 개선 필요
