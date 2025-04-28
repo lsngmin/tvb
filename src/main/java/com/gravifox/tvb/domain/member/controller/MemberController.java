@@ -1,6 +1,7 @@
 package com.gravifox.tvb.domain.member.controller;
 
 import com.gravifox.tvb.domain.member.dto.mypage.MyInfoResponse;
+import com.gravifox.tvb.domain.member.service.MemberService;
 import com.gravifox.tvb.security.jwt.principal.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
