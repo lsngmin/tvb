@@ -27,10 +27,25 @@ public class LogFactory {
     public LogBuilder of(HttpServletRequest request, GlobalException ex, LogContext logContext, String className) {
         return new LogBuilder(request, ex, logContext, className, loggingUtil);
     }
+    public LogBuilder of(HttpServletRequest request, HttpServletResponse response, String className) {
+        return new LogBuilder(request, response, className, loggingUtil);
+    }
 
     public static class LogBuilder {
         private final LogMessage.LogMessageBuilder builder;
         private final LoggingUtil loggingUtil;
+
+        public LogBuilder(HttpServletRequest request, HttpServletResponse response, String className, LoggingUtil loggingUtil) {
+            String statusCode = response != null ? Integer.toString(response.getStatus()) : "";
+
+            this.builder = LogMessage.builder()
+                    .method(request.getMethod())
+                    .uri(request.getRequestURI())
+                    .code(statusCode)
+                    .className(className);
+
+            this.loggingUtil = loggingUtil;
+        }
 
         public LogBuilder(HttpServletRequest request,
                           GlobalException e,
@@ -68,6 +83,7 @@ public class LogFactory {
                     .className(className);
             this.loggingUtil = loggingUtil;
         }
+
         public LogBuilder className(String c) {builder.className(c); return this;}
         public LogBuilder method(String m) { builder.method(m); return this; }
         public LogBuilder uri(String u) { builder.uri(u); return this; }

@@ -2,34 +2,38 @@ package com.tvb.interceptor;
 
 import com.tvb.domain.member.exception.register.InvalidFormatException;
 import com.tvb.domain.member.exception.register.RegisterException;
+import com.tvb.domain.member.logging.util.LogFactory;
+import com.tvb.domain.member.logging.util.LogStatus;
 import com.tvb.domain.member.logging.util.LoggingUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class DurationInterceptor implements HandlerInterceptor {
-    private final LoggingUtil loggingUtil;
+    private final LogFactory logFactory;
     private static final String START_TIME = "startTime";
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        String className = handlerMethod.getBeanType().getSimpleName();
+
         Long startTime = (Long) request.getAttribute(START_TIME);
         long endTime = System.currentTimeMillis();
-        String duration = endTime - startTime + "ms";
+        String duration = "Duration: " + (endTime - startTime) + "ms";
 
-        log.info(loggingUtil.formatMessage(
-                "RequestDuration ", "TrackingCompleted", "Duration",
-                request.getMethod(),
-                request.getRequestURI(),
-                response.getStatus(),
-                duration
-        ));
+        log.info(logFactory.of(request, response, className)
+                .action("RequestDuration")
+                .status(LogStatus.OK)
+                        .detail(duration)
+                .build());
     }
 
     @Override

@@ -2,12 +2,9 @@ package com.tvb.domain.member.logging;
 
 import com.tvb.annotation.LogContext;
 import com.tvb.domain.member.dto.AuthDTO;
-import com.tvb.domain.member.dto.register.RegisterResponse;
 import com.tvb.domain.member.exception.register.RegisterException;
-import com.tvb.domain.member.exception.register.InvalidFormatException;
 import com.tvb.domain.member.logging.util.LogFactory;
 import com.tvb.domain.member.logging.util.LogStatus;
-import com.tvb.domain.member.logging.util.LoggingUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
