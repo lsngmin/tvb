@@ -58,5 +58,25 @@
     "name": "✅ Test",
     "color": "ccffc4",
     "description": "test 관련(storybook, jest...)"
+  },
+  {
+    "name": "priority: must",
+    "color": "d73a4a",
+    "description": "Must have – essential for release"
+  },
+  {
+    "name": "priority: should",
+    "color": "ff9800",
+    "description": "Should have – important but not critical"
+  },
+  {
+    "name": "priority: could",
+    "color": "fbca04",
+    "description": "Could have – nice to have if time permits"
+  },
+  {
+    "name": "priority: won't",
+    "color": "cfd3d7",
+    "description": "Won't have – agreed to omit this time"
   }
 ]
