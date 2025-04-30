@@ -1,16 +1,13 @@
 ---
 name: Feature Issue
 about: Suggest a new feature
-title: 'Feature: featureTitle '
+title: 'feat(domain): featureTitle'
 labels: "✨ Feature"
 assignees: lsngmin
 
 ---
 
-## Feature Request Template
-
-**Feature Title:**
-<!-- 간단한 기능 제목을 입력해주세요. 예: 사용자 로그인 기능 -->
+# <!-- featureTitle -->
 
 ### Summary
 ```
