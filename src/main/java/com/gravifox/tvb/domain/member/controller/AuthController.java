@@ -3,7 +3,15 @@ package com.gravifox.tvb.domain.member.controller;
 import com.gravifox.tvb.annotation.LogContext;
 import com.gravifox.tvb.domain.member.dto.login.LoginRequest;
 import com.gravifox.tvb.domain.member.dto.login.LoginResponse;
+import com.gravifox.tvb.domain.member.exception.common.ErrorMessageMap;
 import com.gravifox.tvb.domain.member.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +25,19 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Tag(name = "인증", description = "로그인, 토큰 갱신, 사용자 정보 확인 및 로그아웃 기능을 제공합니다.")
 public class AuthController {
     private final AuthService authService;
+
+    @Operation(
+            summary = "로그인",
+            description = "로그인 요청을 수행하고, 요청이 성공하면 Access Token과 Refresh Token을 발급받습니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "로그인 성공",content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "인증 실패 - 잘못된 사용자 정보", content = @Content(mediaType = "application/json") ),
+
+            }
+    )
 
     @PostMapping("/login")
     @LogContext(action = "UserAuthentication", detail="UserId")
@@ -53,6 +72,16 @@ public class AuthController {
      * @param response
      * @return
      */
+
+    @Operation(
+            summary = "Access Token 갱신",
+            description = "Refresh Token을 사용하여 Access Token을 재발급합니다. Access Token이 만료된 경우에만 호출됩니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "토큰 재발급 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "401", description = "유효하지 않거나 만료된 토큰", content = @Content(mediaType ="application/json"))
+            }
+    )
+
     @PostMapping("/refresh")
     @LogContext(action = "UserTokenRefresh", detail="ONLY REFRESH NOT AUTHENTICATION!")
     public ResponseEntity<?> refresh(@RequestHeader(value = "Authorization", required = false) String accessToken,
@@ -66,6 +95,14 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("accessToken", map.get("accessToken")));
     }
 
+    @Operation(
+            summary = "현재 사용자 정보 확인",
+            description = "Access Token을 통해 로그인된 사용자의 정보를 확인합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "401", description = "인증 실패 - 토큰 없음 / 유효하지 않음", content = @Content(mediaType = "application/json"))
+            }
+    )
     @GetMapping("/me")
     public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String accessToken,
                                 @CookieValue(name = "refreshToken", required = false) String refreshToken) {
@@ -82,6 +119,14 @@ public class AuthController {
         return ResponseEntity.ok(authService.validateUserToken(accessToken.substring(7)));
     }
 
+
+        @Operation(
+                summary = "사용자 로그아웃",
+                description = "Refresh Token 쿠키를 만료시켜 로그아웃 처리를 합니다.",
+                responses = {
+                        @ApiResponse(responseCode = "200",description = "로그아웃 성공", content = @Content(mediaType = "application/json"))
+                }
+        )
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader(value = "Authorization", required = false) String accessToken,
 
