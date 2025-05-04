@@ -18,11 +18,24 @@ import java.util.Map;
 @NoArgsConstructor
 public class LoginRequest implements AuthDTO {
 
-    @Schema(description = "로그인에 사용할 사용자 정보", required = true)
-    private User user;
+    @Schema(description = "로그인에 사용할 사용자 정보",
+            required = true,
+            example = """
+        {
+            "userId": "user@example.com",
+            "userNo": 1
+        }
+        """
+    )    private User user;
 
-    @Schema(description = "사용자 비밀번호 정보", required = true)
-    private Password password;
+    @Schema(description = "사용자 비밀번호 정보",
+            required = true,
+            example = """
+        {
+            "password": "encrypted_password"
+        }
+        """
+    )    private Password password;
 
     public Map<String, String> getDataMap() {
         Map<String, String> data = new HashMap<>();
