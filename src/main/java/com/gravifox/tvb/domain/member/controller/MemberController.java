@@ -16,32 +16,42 @@ import org.springframework.web.bind.annotation.*;
 
 //
 @Tag(
-        name="회원 정보 조회",
-        description = "인증된 사용자의 회원 정보를 반환합니다. 액세스 토큰 기반으로 사용자 번호를 추출하고, 그에 해당하는 정보를 조회합니다."
+        name = "내 사용자 정보 조회",
+        description = """
+        로그인한 사용자가 자신의 정보를 확인할 수 있는 API입니다.
+        클라이언트는 JWT Access Token을 Authorization 헤더에 담아 요청해야 하며,
+        서버는 토큰을 통해 인증된 사용자 정보를 반환합니다.
+        이 API는 마이페이지 조회 또는 프로필 편집 화면 등에 활용됩니다.
+    """
 )
 @RestController
-@RequestMapping("/api/v1/member")
+@RequestMapping("/api/v1/profile")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
     @Operation(
-                summary = "내 정보 조회",
-            description = "로그인한 사용자의 회원 정보를 반환합니다. JWT 토큰 기반 인증이 필요하며, 반환 데이터에는 사용자 ID 등이 포함됩니다.",
+            summary = "내 사용자 정보 조회",
+            description = """
+                로그인한 사용자가 본인의 정보를 조회하는 API입니다.
+                클라이언트는 Authorization 헤더에 Access Token을 포함해야 하며,
+                서버는 토큰을 검증하여 인증된 사용자의 정보를 반환합니다.
+    
+                반환되는 정보에는 사용자 ID, 이메일, 이름, 가입일 등이 포함됩니다.
+            """,
             responses = {
                         @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MyInfoResponse.class))),
-                        @ApiResponse(responseCode = "401", description = "인증 실패 - 유효하지 않은 토큰 또는 토큰 없음", content = @Content(mediaType = "application/josn"))
+                        @ApiResponse(responseCode = "422", description = "토큰은 존재하나 유효하지 않거나 사용자 정보가 존재하지 않음", content = @Content(mediaType = "application/json"))
             }
     )
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getMyInfo(Authentication authentication) {
+    @GetMapping("/")
+    public MyInfoResponse getMyInfo(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Long userNo = Long.parseLong(userPrincipal.getName());
 
-        MyInfoResponse myInfo = memberService.getMyInfo(userNo);
-
-        return ResponseEntity.ok(myInfo);
+        return memberService.getMyInfo(userNo);
     }
+
 }
