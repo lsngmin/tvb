@@ -4,6 +4,7 @@ import com.gravifox.tvb.domain.member.dto.AuthDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+//
 @Schema(description = "사용자 로그인 응답 DTO")
 @Data
 public class LoginResponse implements AuthDTO {
