@@ -20,7 +20,11 @@ public enum ErrorCode {
     INVALID_PASSWORD_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_PASSWORD_ERROR", "Password must be 8–20 characters long and include letters, numbers, and special characters"),
     INVALID_USERID_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_USERID_ERROR", "Please enter a valid email address"),
     INVALID_NICKNAME_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_NICKNAME_ERROR", "NickName cannot be blank"),
-    INVALID_LOGINTYPE_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_LOGINTYPE_ERROR", "The request data contains invalid fields");
+    INVALID_LOGINTYPE_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_LOGINTYPE_ERROR", "The request data contains invalid fields"),
+
+    USER_NOT_FOUND(HttpStatus.UNPROCESSABLE_ENTITY, "USER_NOT_FOUND", "사용자 정보를 찾을 수 없습니다.")
+    ;
+
 
     private final HttpStatus httpStatus;
     private final String code;
