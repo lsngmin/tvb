@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+//
 @Tag(
         name="회원 정보 조회",
         description = "인증된 사용자의 회원 정보를 반환합니다. 액세스 토큰 기반으로 사용자 번호를 추출하고, 그에 해당하는 정보를 조회합니다."
