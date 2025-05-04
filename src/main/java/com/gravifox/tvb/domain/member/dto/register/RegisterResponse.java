@@ -14,6 +14,6 @@ public class RegisterResponse implements AuthDTO {
         return this.userId;
     }
 
-    @Schema(description = "사용자 아이디", example = "user@example.com", required = true)
+    @Schema(description = "회원가입된 사용자의 이메일", example = "user@example.com", required = true)
     private String userId;
 }
