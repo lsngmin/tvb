@@ -8,6 +8,7 @@ import com.gravifox.tvb.domain.member.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,16 +27,49 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@Tag(name = "인증", description = "로그인, 토큰 갱신, 사용자 정보 확인 및 로그아웃 기능을 제공합니다.")
+@Tag(
+        name = "인증",
+        description = """
+            인증과 관련된 API입니다.
+            사용자가 로그인하면 Access Token과 Refresh Token을 발급받고,
+            이를 통해 사용자 인증 및 인가 처리를 수행합니다.
+            - 로그인: 사용자 정보를 기반으로 토큰을 발급받습니다.
+            - 토큰 갱신: Access Token 만료 시 Refresh Token으로 재발급합니다.
+            - 사용자 조회: 발급된 Access Token으로 사용자 정보를 확인합니다.
+            - 로그아웃: Refresh Token 쿠키를 제거하여 세션을 종료합니다.
+    """
+)
 public class AuthController {
     private final AuthService authService;
 
     @Operation(
-            summary = "로그인",
-            description = "로그인 요청을 수행하고, 요청이 성공하면 Access Token과 Refresh Token을 발급받습니다.",
+            summary = "사용자 로그인",
+            description = "이메일(ID)과 비밀번호를 입력하여 로그인을 시도합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = LoginRequest.class),
+                            examples = @ExampleObject(
+                                    name = "로그인 요청 예시",
+                                    summary = "정상 로그인 요청",
+                                    value = """
+                    {
+                        "user": {
+                            "userId": "user@example.com",
+                            "userNo": 1
+                        },
+                        "password": {
+                            "password": "my_password_123!"
+                        }
+                    }
+                """
+                            )
+                    )
+            ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "로그인 성공",content = @Content(schema = @Schema(implementation = LoginResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "인증 실패 - 잘못된 사용자 정보", content = @Content(mediaType = "application/json") ),
+                    @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(implementation = ErrorMessageMap.class)))
 
             }
     )
@@ -75,12 +109,20 @@ public class AuthController {
      */
 
     @Operation(
-            summary = "Access Token 갱신",
-            description = "Refresh Token을 사용하여 Access Token을 재발급합니다. Access Token이 만료된 경우에만 호출됩니다.",
+            summary = "JWT 토큰 갱신",
+            description = """
+            클라이언트가 보유한 Refresh Token을 통해 새로운 Access Token을 발급받습니다.
+        
+            일반적으로 Access Token이 만료된 상태에서 호출되며, 서버는:
+            - Authorization 헤더에 담긴 Access Token (옵션)
+            - 쿠키에 담긴 Refresh Token (필수)
+            을 검증하여 새로운 JWT를 발급합니다.
+        
+            새롭게 발급된 Refresh Token은 쿠키에 다시 저장됩니다.
+    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "토큰 재발급 성공", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "401", description = "유효하지 않거나 만료된 토큰", content = @Content(mediaType ="application/json"))
-            }
+                    @ApiResponse(responseCode = "401", description = "유효하지 않거나 만료된 토큰", content = @Content(mediaType = "application/json"))            }
     )
 
     @PostMapping("/refresh")
