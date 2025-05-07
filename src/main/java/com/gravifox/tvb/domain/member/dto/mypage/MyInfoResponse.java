@@ -7,7 +7,17 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "내 정보 조회 응답 DTO")
+@Schema(
+        description = "내 정보 조회 응답 DTO",
+        example = """
+    {
+      "userId": "user@example.com",
+      "loginType": "EMAIL",
+      "nickname": "hellojungjae",
+      "createdAt": "2024-05-01T15:20:00"
+    }
+    """
+)
 @Getter
 @Builder
 public class MyInfoResponse implements AuthDTO {
@@ -26,6 +36,6 @@ public class MyInfoResponse implements AuthDTO {
 
     @Override
     public String extractUserID() {
-        return userId;
+        return this.userId;
     }
 }
