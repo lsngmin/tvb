@@ -5,7 +5,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Schema(description = "회원가입 성공 응답 DTO")
+@Schema(
+        description = "회원가입 성공 응답 DTO",
+        example = """
+    {
+      "userId": "user@example.com"
+    }
+    """
+)
 @AllArgsConstructor
 @Getter
 public class RegisterResponse implements AuthDTO {
