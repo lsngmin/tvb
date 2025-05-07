@@ -47,11 +47,12 @@ public class MemberController {
     )
 
     @GetMapping("/")
-    public MyInfoResponse getMyInfo(Authentication authentication) {
+    public ResponseEntity<MyInfoResponse> getMyInfo(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Long userNo = Long.parseLong(userPrincipal.getName());
 
-        return memberService.getMyInfo(userNo);
+        MyInfoResponse response = memberService.getMyInfo(userNo);
+        return ResponseEntity.ok(response);
     }
 
 }
