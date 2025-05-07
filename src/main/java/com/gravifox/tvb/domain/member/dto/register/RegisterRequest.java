@@ -13,8 +13,26 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 //
-@Schema(description = "사용자 회원가입 정보 DTO")
-
+@Schema(
+        description = "사용자 회원가입 정보 DTO",
+        example = """
+    {
+      "user": {
+        "userId": "user@example.com",
+        "loginType": "EMAIL"
+      },
+      "profile": {
+        "nickname": "hellojungjae",
+        "createdAt": "2025-04-28T12:34:56",
+        "updatedAt": "2025-04-29T11:03:54"
+      },
+      "password": {
+        "password": "StrongP@ssword",
+        "updatedAt": "2025-04-29T14:05:32"
+      }
+    }
+    """
+)
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,20 +53,43 @@ public class RegisterRequest implements AuthDTO {
         return this.user.getUserId();
     }
 
+
+    @Schema(
+            description = "회원가입 시 사용자 계정 정보",
+            example = """
+    {
+      "userId": "user@example.com",
+      "loginType": "EMAIL"
+    }
+    """
+    )
     @Builder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UserRequestData {
+
+        @Schema(description = "사용자 이메일(ID)", example = "user@example.com", required = true)
         @NotNull private String userId;
+
+        @Schema(description = "로그인 방식", example = "EMAIL", required = true)
         @NotNull String loginType;
     }
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    @Schema(description = "회원가입 시 사용자 기본 정보")
-    public static class ProfileRequestData {
+    @Schema(
+            description = "회원가입 시 사용자 기본 정보",
+            example = """
+    {
+      "nickname": "hellojungjae",
+      "createdAt": "2025-04-28T12:34:56",
+      "updatedAt": "2025-04-29T11:03:54"
+    }
+    """
+    )
+        public static class ProfileRequestData {
         @Schema(description = "사용자 닉네임" , example = "홍길동", required = true)
         @NotNull private String nickname;
 
@@ -66,7 +107,15 @@ public class RegisterRequest implements AuthDTO {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    @Schema(description = "회원가입 시 사용자 비밀번호 정보")
+    @Schema(
+            description = "회원가입 시 사용자 비밀번호 정보",
+            example = """
+            {
+                "password": "StrongP@ssword",
+                "updatedAt": "2025-04-29T14:05:32"
+            }
+            """
+        )
     public static class PasswordRequestData {
         @Schema(description = "비밀번호", example = "StrongP@ssword",required = true)
         @NotNull private String password;
