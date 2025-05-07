@@ -4,17 +4,52 @@ package com.gravifox.tvb.domain.member.dto.login;
 import com.gravifox.tvb.domain.member.domain.Password;
 import com.gravifox.tvb.domain.member.domain.user.User;
 import com.gravifox.tvb.domain.member.dto.AuthDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+//
+@Schema(
+        description = "사용자 로그인 요청 DTO",
+        example = """
+    {
+      "user": {
+        "userId": "user@example.com"
+      },
+      "password": {
+        "password": "Password123!"
+      }
+    }
+    """
+)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest implements AuthDTO {
+
+    @Schema(
+            description = "로그인에 사용할 사용자 정보",
+            required = true,
+            example = """
+        {
+          "userId": "user@example.com"
+        }
+        """
+    )
     private User user;
+
+    @Schema(
+            description = "사용자 비밀번호 정보",
+            required = true,
+            example = """
+        {
+          "password": "Password123!"
+        }
+        """
+    )
     private Password password;
 
     public Map<String, String> getDataMap() {
