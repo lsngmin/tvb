@@ -57,7 +57,6 @@ public class AuthController {
                     {
                         "user": {
                             "userId": "user@example.com",
-                            "userNo": 1
                         },
                         "password": {
                             "password": "my_password_123!"
@@ -69,8 +68,8 @@ public class AuthController {
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = LoginResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(implementation = ErrorMessageMap.class)))
-
+                    @ApiResponse(responseCode = "422", description = "유효하지 않은 사용자 ID 또는 비밀번호", content = @Content(schema = @Schema(implementation = ErrorMessageMap.class))
+                    )
             }
     )
 
