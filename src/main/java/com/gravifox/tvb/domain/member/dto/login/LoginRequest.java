@@ -11,31 +11,46 @@ import java.util.HashMap;
 import java.util.Map;
 
 //
-@Schema(description = "사용자 로그인 요청 DTO")
+@Schema(
+        description = "사용자 로그인 요청 DTO",
+        example = """
+    {
+      "user": {
+        "userId": "user@example.com"
+      },
+      "password": {
+        "password": "Password123!"
+      }
+    }
+    """
+)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest implements AuthDTO {
 
-    @Schema(description = "로그인에 사용할 사용자 정보",
+    @Schema(
+            description = "로그인에 사용할 사용자 정보",
             required = true,
             example = """
         {
-            "userId": "user@example.com",
-            "userNo": 1
+          "userId": "user@example.com"
         }
         """
-    )    private User user;
+    )
+    private User user;
 
-    @Schema(description = "사용자 비밀번호 정보",
+    @Schema(
+            description = "사용자 비밀번호 정보",
             required = true,
             example = """
         {
-            "password": "encrypted_password"
+          "password": "Password123!"
         }
         """
-    )    private Password password;
+    )
+    private Password password;
 
     public Map<String, String> getDataMap() {
         Map<String, String> data = new HashMap<>();
