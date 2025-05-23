@@ -40,32 +40,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .formLogin(AbstractHttpConfigurer::disable);
-        http
-                .logout(AbstractHttpConfigurer::disable);
-        http
-                .csrf(AbstractHttpConfigurer::disable);
-        http
-                .sessionManagement(sessionManagementConfigurer -> {
-                    sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.NEVER);
-                });
-        
-        http
-                .addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class);
-        http
-                .cors(cors -> {
-                    cors.configurationSource(corsConfigurationSource());
-                });
-        http
-                .oauth2Login((oAuth2LoginConfigurer) -> oAuth2LoginConfigurer
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.NEVER))
+
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/docs/**",
+                                "/api/upload-swagger"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+
+                .addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .oauth2Login(oauth -> oauth
                         .loginPage(loginUrl)
-                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(OAuth2UserService)
-                        )
+                        .userInfoEndpoint(userInfo -> userInfo.userService(OAuth2UserService))
                         .successHandler(oAuth2UserSuccessHandler)
-        );
+                );
+
         return http.build();
     }
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

@@ -32,8 +32,8 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         return path.startsWith("/api/v1/auth") || path.startsWith("/api/v1/register") ||
                 path.startsWith("/api/v1/auth/refresh") || path.startsWith("/health") ||
                 path.startsWith("/api/v1/auth/**") || path.startsWith("/api/v1/images/send_data") ||
-                path.startsWith("/api/v1/issue/") || path.startsWith("/docs") ||
-                path.startsWith("/docs/") || path.startsWith("/swagger-resources/**");
+                path.startsWith("/api/v1/issue/") || path.startsWith("/docs") || path.startsWith("/v3/api-docs") ||
+                path.startsWith("/docs/") || path.startsWith("/swagger-resources/**") || path.startsWith("/api/upload-swagger");
 
     }
 
