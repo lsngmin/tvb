@@ -48,6 +48,10 @@ public class MemberServiceImpl implements MemberService {
         passwordRepository.deleteByUser(user);
         socialLoginRepository.deleteByUser(user);
         userRepository.delete(user);
+    }
+
+    @Override
+    @Transactional
     public void changePassword(Long userNo, PasswordChangeRequest request) {
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new UserNotFoundException(userNo));
