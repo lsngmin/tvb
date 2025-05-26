@@ -1,17 +1,22 @@
 package com.gravifox.tvb.domain.member.controller;
 
+import com.gravifox.tvb.domain.member.domain.user.User;
 import com.gravifox.tvb.domain.member.dto.mypage.MyInfoResponse;
+import com.gravifox.tvb.domain.member.dto.mypage.PasswordChangeRequest;
+import com.gravifox.tvb.domain.member.exception.user.UserNotFoundException;
+import com.gravifox.tvb.domain.member.repository.UserRepository;
 import com.gravifox.tvb.domain.member.service.MemberService;
 import com.gravifox.tvb.security.jwt.principal.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 //
@@ -30,7 +35,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-
+    private final UserRepository userRepository;
     @Operation(
             summary = "내 사용자 정보 조회",
             description = """
@@ -55,4 +60,18 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/")
+    public ResponseEntity<Void> deleteMyAccount(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        memberService.deleteAccount(Long.parseLong(userPrincipal.getName()));
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal UserPrincipal principal,
+                                               @RequestBody PasswordChangeRequest request) {
+        Long userNo = Long.parseLong(principal.getName()); // getName() = userNo (String)
+        memberService.changePassword(userNo, request);
+        return ResponseEntity.ok().build();
+    }
 }
