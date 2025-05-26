@@ -5,6 +5,6 @@ import com.gravifox.tvb.domain.member.dto.mypage.PasswordChangeRequest;
 
 public interface MemberService {
     MyInfoResponse getMyInfo(Long userNo);
-
+    void deleteAccount(Long userNo);
     void changePassword(Long userNo, PasswordChangeRequest request);
 }

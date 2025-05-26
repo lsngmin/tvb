@@ -1,5 +1,9 @@
 package com.gravifox.tvb.domain.member.service.impl;
 
+import com.gravifox.tvb.domain.member.domain.user.User;
+import com.gravifox.tvb.domain.member.dto.mypage.MyInfoResponse;
+import com.gravifox.tvb.domain.member.repository.PasswordRepository;
+import com.gravifox.tvb.domain.member.repository.SocialLoginRepository;
 import com.gravifox.tvb.domain.member.domain.Password;
 import com.gravifox.tvb.domain.member.domain.user.User;
 import com.gravifox.tvb.domain.member.dto.mypage.MyInfoResponse;
@@ -20,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final UserRepository userRepository;
     private final PasswordRepository passwordRepository;
+    private final SocialLoginRepository socialLoginRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -36,6 +41,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
+    public void deleteAccount(Long userNo) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new UserNotFoundException(userNo));
+
+        passwordRepository.deleteByUser(user);
+        socialLoginRepository.deleteByUser(user);
+        userRepository.delete(user);
     public void changePassword(Long userNo, PasswordChangeRequest request) {
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new UserNotFoundException(userNo));

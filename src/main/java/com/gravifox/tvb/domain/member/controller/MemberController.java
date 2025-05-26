@@ -60,6 +60,13 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/")
+    public ResponseEntity<Void> deleteMyAccount(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        memberService.deleteAccount(Long.parseLong(userPrincipal.getName()));
+        return ResponseEntity.noContent().build();
+    }
+
+
     @PatchMapping("/password")
     public ResponseEntity<Void> changePassword(@AuthenticationPrincipal UserPrincipal principal,
                                                @RequestBody PasswordChangeRequest request) {
