@@ -14,4 +14,5 @@ public interface PasswordRepository extends JpaRepository<Password, Long> {
     Optional<String> findPasswordByUser(@Param("user") User user);
 
     void deleteByUser(User user);
+    Optional<Password> findByUser(User user);
 }
