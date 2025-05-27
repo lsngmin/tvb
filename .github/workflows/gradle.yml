@@ -25,6 +25,12 @@ jobs:
           mysql user: 'root'
           mysql password: 'rootroot'
 
+      - name: Export DB env
+        run: |
+          echo "SPRING_DATASOURCE_URL=jdbc:mysql://127.0.0.1:3306/member" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_USERNAME=root"         >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_PASSWORD=rootroot"     >> $GITHUB_ENV
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
