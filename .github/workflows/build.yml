@@ -1,0 +1,128 @@
+name: GraviFox CI - Build & Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      TZ: Asia/Seoul
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # JDK 및 Gradle 설정
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # MySQL 시작 및 환경 변수 설정 (테스트용)
+      - name: Start MySQL
+        uses: samin/mysql-action@v1.3
+        with:
+          host port: 3306
+          mysql version: '8.0.41'
+          mysql database: 'member'
+          mysql root password: 'rootroot'
+          mysql user: 'root'
+          mysql password: 'rootroot'
+
+      - name: Export DB env
+        run: |
+          echo "SPRING_DATASOURCE_URL=jdbc:mysql://127.0.0.1:3306/member" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_USERNAME=root"         >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_PASSWORD=rootroot"     >> $GITHUB_ENV
+
+      # 테스트 실행
+      - name: Run tests
+        run: ./gradlew test
+
+      # 애플리케이션 어셈블리
+      - name: Assemble application
+        run: ./gradlew assemble
+
+      # 아티팩트 업로드
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tvb-app
+          path: build/libs/*.jar
+#
+#
+#      - name: Build with Gradle Wrapper
+#        run: ./gradlew clean build
+#
+#      - name: Get current Time
+#        uses: josStorer/get-current-time@v2.0.2
+#        id: current-time
+#        with:
+#          format: YYYY-MM-DDTHH-mm-ss
+#          utcOffset: "+09:00"
+#
+#      - name: Create Procfile
+#        run: |
+#          echo "web: java -Dserver.port=8080 -jar app.jar --spring.profiles.active=prod" > Procfile
+#
+#      - name: Generate deployment package
+#        run: |
+#          cp ./build/libs/tvb-0.0.1-SNAPSHOT.jar app.jar
+#          echo "web: java -jar app.jar --server.port=8080" > Procfile
+#
+#          mkdir -p .ebextensions
+#          echo "container_commands:" > .ebextensions/01-timezone.config
+#          echo "  01_set_timezone:" >> .ebextensions/01-timezone.config
+#          echo "    command: 'ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime'" >> .ebextensions/01-timezone.config
+#
+#          zip -r deploy.zip . -x '*.git*' 'build/*' 'gradle/*' '.gradle/*'
+#      - name: Set Up environment variables
+#        run: |
+#          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+#          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+#          echo "ACCESS_TOKEN_G=${{ secrets.ACCESS_TOKEN_G }}" >> $GITHUB_ENV
+#          echo "SLACK_WEBHOOK_URI=${{ secrets.SLACK_WEBHOOK_URI }}" >> $GITHUB_ENV
+#
+#      - name: Beanstalk Deploy
+#        uses: einaregilsson/beanstalk-deploy@v22
+#        with:
+#          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          application_name: tvb
+#          environment_name: Tvb-env-1
+#          version_label: ${{ github.sha }}
+#          region: us-east-2
+#          deployment_package: deploy.zip
+#
+#      - name: Configure nginx
+#        run: |
+#          mkdir -p .ebextensions/nginx
+#          echo "files:
+#            /etc/nginx/conf.d/proxy.conf:
+#              mode: \"000644\"
+#              owner: root
+#              group: root
+#              content: |
+#                server {
+#                    listen 80;
+#                    server_name localhost;
+#
+#                    location / {
+#                        proxy_pass http://127.0.0.1:8080;
+#                        proxy_set_header Host \$host;
+#                        proxy_set_header X-Real-IP \$remote_addr;
+#                        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+#                    }
+#                }" > .ebextensions/nginx/nginx.conf
