@@ -1,4 +1,4 @@
-name: GraviFox CD - Deploy to Elastic Beanstalk
+name: GraviFox CI & CD
 
 on:
   push:
@@ -97,7 +97,7 @@ jobs:
       - name: Generate deployment package
         run: |
           cp deploy/*.jar app.jar
-          echo "web: java -jar app.jar --server.port=8080" > Procfile
+          echo "web: java -Xms256m -Xmx512m -XX:+UseContainerSupport -jar app.jar --server.port=8080 --spring.profiles.active=prod" > Procfile
           
           mkdir -p .ebextensions
           echo "container_commands:" > .ebextensions/01-timezone.config
