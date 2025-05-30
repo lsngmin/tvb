@@ -1,12 +1,15 @@
 package com.gravifox.tvb.domain.dashboard.service.impl;
 
+import com.gravifox.tvb.domain.dashboard.domain.Dashboard;
 import com.gravifox.tvb.domain.dashboard.dto.DashboardInfoResponse;
 import com.gravifox.tvb.domain.dashboard.repository.DashboardRepository;
 import com.gravifox.tvb.domain.dashboard.service.DashboardService;
 import com.gravifox.tvb.security.jwt.util.JWTUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -18,11 +21,30 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardInfoResponse getDashboardData(Long userNo) {
-        Optional<String> apiKey = dashboardRepository.findDashboardByUser(userNo);
+        Optional<String> apiKey = dashboardRepository.findApiKeyByUser(userNo);
 
         return apiKey
                 .map(key -> DashboardInfoResponse.builder().apiKey(key).build())
-                .orElseThrow(() -> new NoSuchElementException("Dashboard not found"));
+                .orElseGet(() -> DashboardInfoResponse.builder().apiKey("빈 문자열").build());
+    }
+
+    @Override
+    @Transactional
+    public String generateDashboardApiKey(Long userNo) {
+        String token = jwtUtil.createToken(Map.of("userNo", String.valueOf(userNo)), 1);
+
+        Optional<Dashboard> d = dashboardRepository.findDashboardByUserNo(userNo);
+        if(d.isPresent() && d.get().getApiKey().equals("")) {
+            dashboardRepository.updateApiKey(userNo, token);
+            return token;
+        }
+        else if(d.isPresent()) {
+            return d.get().getApiKey();
+        }
+        else {
+            System.out.println(userNo);
+            throw new NoSuchElementException();
+        }
     }
 
 }

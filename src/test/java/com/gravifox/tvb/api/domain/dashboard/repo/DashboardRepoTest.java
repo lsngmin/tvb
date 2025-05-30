@@ -4,6 +4,9 @@ import com.gravifox.tvb.domain.dashboard.domain.Dashboard;
 import com.gravifox.tvb.domain.dashboard.repository.DashboardRepository;
 import com.gravifox.tvb.domain.member.domain.user.LoginType;
 import com.gravifox.tvb.domain.member.domain.user.User;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -24,24 +27,37 @@ public class DashboardRepoTest {
     @Autowired
     TestEntityManager entityManager;
 
-    @Test
-    void findByUserNo_returnsDashboard() {
-        User u = new User().builder()
+    private User u;
+    private Dashboard d;
+
+    @BeforeEach
+    void init() {
+         u = User.builder()
                 .userId("TEST!@#123")
                 .loginType(LoginType.EMAIL)
                 .build();
         entityManager.persist(u);
 
-        Dashboard d = new Dashboard().builder()
+        d = Dashboard.builder()
                 .apiKey("API키 입니다.")
                 .user(u)
                 .build();
         entityManager.persist(d);
 
         entityManager.flush();
+    }
 
-        Optional<String> foundApiKey = dashboardRepository.findDashboardByUser(u.getUserNo());
+    @Test
+    void findByUserNo_returnsDashboard() {
+        Optional<String> foundApiKey = dashboardRepository.findApiKeyByUser(u.getUserNo());
         assertThat(foundApiKey).isPresent();
+    }
+
+    @Test
+    @DisplayName("Dashboard 테이블에 유저 정보가 없을 경우")
+    void updateApikey_whenNotExist_shouldCreateDashboard() {
+        Optional<Dashboard> foundDashboard = dashboardRepository.findDashboardByUserNo(u.getUserNo());
+        assertThat(foundDashboard).isPresent();
     }
 
 }

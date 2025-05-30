@@ -38,7 +38,7 @@ public class DashboardServiceTest {
         long userNo = 42L;
         String expectedApiKey = "abc-123-key";
 
-        when(dashboardRepo.findDashboardByUser(userNo)).thenReturn(Optional.of(expectedApiKey));
+        when(dashboardRepo.findApiKeyByUser(userNo)).thenReturn(Optional.of(expectedApiKey));
 
         DashboardInfoResponse dto = service.getDashboardData(userNo);
 

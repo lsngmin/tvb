@@ -2,6 +2,7 @@ package com.gravifox.tvb.api.domain.dashboard.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.gravifox.tvb.domain.dashboard.controller.DashboardController;
@@ -14,6 +15,7 @@ import com.gravifox.tvb.domain.member.domain.user.User;
 import com.gravifox.tvb.domain.member.repository.UserRepository;
 import com.gravifox.tvb.security.jwt.principal.UserPrincipal;
 import com.gravifox.tvb.security.jwt.util.JWTUtil;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +40,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class DashboardControllerIntegrationTest {
@@ -61,7 +64,7 @@ public class DashboardControllerIntegrationTest {
     void setUp() {
         User user = User.builder()
                 .loginType(LoginType.EMAIL)
-                .userId("test@example.com")
+                .userId("test123@example.com")
                 .build();
         savedUser = userRepository.save(user);
 
@@ -75,7 +78,7 @@ public class DashboardControllerIntegrationTest {
     @Test
     @DisplayName("인증된 JWT 사용자로 요청하면 200, apiKey 반환")
     void getDashboard_withRealSecurityContext() throws Exception {
-        String token = jwtUtil.createToken(Map.of("userId", "test@example.com",
+        String token = jwtUtil.createToken(Map.of("userId", "test123@example.com",
                 "userNo", String.valueOf(savedUser.getUserNo())), 10);
 
         mockMvc.perform(get("/api/v1/dashboard/")
@@ -84,5 +87,19 @@ public class DashboardControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.apiKey").value("abc-123-key"));
 
+    }
+    @Test
+    @DisplayName("토큰 발급 요청이 오면 토큰 반환 및 200 반환")
+    void getDashboard_withJWT() throws Exception {
+        String token = jwtUtil.createToken(Map.of("userId", "test@example.com",
+                "userNo", String.valueOf(savedUser.getUserNo())), 10);
+
+
+
+        mockMvc.perform(post("/api/v1/dashboard/generate")
+                .header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.apiKey").doesNotExist());
     }
 }

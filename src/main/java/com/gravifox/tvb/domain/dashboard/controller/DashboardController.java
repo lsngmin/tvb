@@ -1,5 +1,6 @@
 package com.gravifox.tvb.domain.dashboard.controller;
 
+import com.gravifox.tvb.domain.dashboard.domain.Dashboard;
 import com.gravifox.tvb.domain.dashboard.dto.DashboardInfoResponse;
 import com.gravifox.tvb.domain.dashboard.service.DashboardService;
 import com.gravifox.tvb.security.jwt.principal.UserPrincipal;
@@ -9,8 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/dashboard")
@@ -24,5 +28,11 @@ public class DashboardController {
         Long userNo = Long.parseLong(userPrincipal.getName());
         DashboardInfoResponse d = dashboardService.getDashboardData(userNo);
         return ResponseEntity.ok().body(d);
+    }
+    @PostMapping("/generate")
+    public ResponseEntity<?> GenerateToken(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        Long userNo = Long.parseLong(userPrincipal.getName());
+        String toekn = dashboardService.generateDashboardApiKey(userNo);
+        return ResponseEntity.ok().body(toekn);
     }
 }
