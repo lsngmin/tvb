@@ -1,6 +1,8 @@
 package com.gravifox.tvb.domain.member.service.impl;
 
 import com.gravifox.tvb.annotation.LogContext;
+import com.gravifox.tvb.domain.dashboard.domain.Dashboard;
+import com.gravifox.tvb.domain.dashboard.repository.DashboardRepository;
 import com.gravifox.tvb.domain.member.domain.user.LoginType;
 import com.gravifox.tvb.domain.member.dto.register.RegisterRequest;
 import com.gravifox.tvb.domain.member.dto.register.RegisterResponse;
@@ -28,6 +30,8 @@ public class RegisterServiceImpl implements RegisterService {
     @Autowired private PasswordRepository passwordRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private DashboardRepository dashboardRepository;
 
     @Override
     @Transactional
@@ -66,6 +70,13 @@ public class RegisterServiceImpl implements RegisterService {
                 .user(user)
                 .build();
         passwordRepository.save(password);
+
+        Dashboard dashboard = Dashboard.builder()
+                .user(user)
+                .apiKey("")
+                .build();
+        dashboardRepository.save(dashboard);
+
         return toRegisterResponse(user);
     }
     private RegisterResponse toRegisterResponse(User user) {
