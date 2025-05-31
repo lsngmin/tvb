@@ -21,10 +21,10 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardInfoResponse getDashboardData(Long userNo) {
-        Optional<String> apiKey = dashboardRepository.findApiKeyByUser(userNo);
+        Optional<Dashboard> dashboard = dashboardRepository.findDashboardByUserNo(userNo);
 
-        return apiKey
-                .map(key -> DashboardInfoResponse.builder().apiKey(key).build())
+        return dashboard
+                .map(d -> DashboardInfoResponse.builder().apiKey(d.getApiKey()).apiRequestsLeft(d.getApiRequestsLeft()).build())
                 .orElseGet(() -> DashboardInfoResponse.builder().apiKey("빈 문자열").build());
     }
 

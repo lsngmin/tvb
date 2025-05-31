@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "dashboard")
@@ -21,6 +22,10 @@ public class Dashboard {
 
     @Column(name = "api_key")
     private String apiKey;
+
+    @Column(name = "api_requests_left")
+    @ColumnDefault("2000")
+    private Integer apiRequestsLeft;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no", referencedColumnName = "user_no", nullable = false)

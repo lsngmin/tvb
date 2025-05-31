@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DashboardInfoResponse {
     private String apiKey;
+    private Integer apiRequestsLeft;
 }
