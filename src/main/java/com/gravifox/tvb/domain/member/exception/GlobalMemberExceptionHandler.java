@@ -6,6 +6,8 @@ import com.gravifox.tvb.domain.member.exception.common.ErrorMessageMap;
 import com.gravifox.tvb.domain.member.exception.register.RegisterException;
 import com.gravifox.tvb.logging.util.LogUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
