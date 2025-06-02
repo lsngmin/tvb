@@ -13,7 +13,7 @@ jobs:
       TZ: Asia/Seoul
       SPRING_PROFILES_ACTIVE: test
       ACCESS_TOKEN_G: ${{ secrets.ACCESS_TOKEN_G }}
-ㄱ
+
     permissions:
       contents: read
 
