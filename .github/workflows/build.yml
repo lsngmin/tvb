@@ -2,7 +2,7 @@ name: GraviFox CI - Build & Test
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "production" ]
 
 jobs:
   build:
