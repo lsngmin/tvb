@@ -48,7 +48,7 @@ jobs:
 
       # 테스트 실행
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew test --stacktrace --info
 
       # 애플리케이션 어셈블리
       - name: Assemble application
