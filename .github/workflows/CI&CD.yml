@@ -2,7 +2,7 @@ name: GraviFox CI & CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "production" ]
 
 jobs:
   build:
