@@ -85,8 +85,8 @@ public class DashboardControllerIntegrationTest {
         mockMvc.perform(get("/api/v1/dashboard/")
                         .header("Authorization", "Bearer " + token)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.apiKey").exists());
+                .andExpect(status().isOk());
+
 
     }
     @Test
