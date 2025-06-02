@@ -98,8 +98,7 @@ public class DashboardControllerIntegrationTest {
 
 
         mockMvc.perform(post("/api/v1/dashboard/generate")
-                .header("Authorization", "Bearer " + token)
-                .accept(MediaType.APPLICATION_JSON))
+                .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Matchers.not(Matchers.isEmptyOrNullString())));
     }
