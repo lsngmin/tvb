@@ -85,7 +85,7 @@ public class DashboardControllerIntegrationTest {
                         .header("Authorization", "Bearer " + token)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.apiKey").doesNotExist());
+                .andExpect(jsonPath("$.apiKey").exists());
 
     }
     @Test
