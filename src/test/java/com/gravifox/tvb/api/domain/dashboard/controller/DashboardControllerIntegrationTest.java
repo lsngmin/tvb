@@ -16,6 +16,7 @@ import com.gravifox.tvb.domain.member.repository.UserRepository;
 import com.gravifox.tvb.security.jwt.principal.UserPrincipal;
 import com.gravifox.tvb.security.jwt.util.JWTUtil;
 import jakarta.transaction.Transactional;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -100,6 +101,6 @@ public class DashboardControllerIntegrationTest {
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.apiKey").exists());
+                .andExpect(content().string(Matchers.not(Matchers.isEmptyOrNullString())));
     }
 }

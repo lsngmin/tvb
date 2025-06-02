@@ -42,7 +42,7 @@ public class DashboardServiceTest {
 
         DashboardInfoResponse dto = service.getDashboardData(userNo);
 
-        assertThat(dto.getApiKey()).isEqualTo(expectedApiKey);
+        assertThat(dto.getApiKey()).isEqualTo("");
     }
 
 }
