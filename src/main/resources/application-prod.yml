@@ -11,14 +11,14 @@ spring:
 
 front:
   redirect:
-    url: https://www.tvsbox.click
-    login-url: https://www.tvsbox.click/login
+    url: https://www.gravifox.com
+    login-url: https://www.gravifox.com/login
 
 backend:
   upload:
     path: /var/app/current/upload/
   base:
-    url: https://api.tvsbox.click/
+    url: https://api.gravifox.com/
 
 ai:
   base:
