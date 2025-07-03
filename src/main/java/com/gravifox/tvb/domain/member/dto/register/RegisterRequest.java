@@ -30,6 +30,9 @@ import java.time.LocalDateTime;
         "password": "StrongP@ssword",
         "updatedAt": "2025-04-29T14:05:32"
       }
+      "terms": {
+        "termsCookie":"True",
+        "termsMarketing":"True"
     }
     """
 )
@@ -48,11 +51,13 @@ public class RegisterRequest implements AuthDTO {
     @Schema(description = "사용자 비밀번호", required = true)
     @Valid @NotNull private PasswordRequestData password;
 
+    @Schema(description = "사용자 약관동의 정보", required = true)
+    @Valid @NotNull private TermsRequestData terms;
+
     @Override
     public String extractUserID() {
         return this.user.getUserId();
     }
-
 
     @Schema(
             description = "회원가입 시 사용자 계정 정보",
@@ -125,5 +130,28 @@ public class RegisterRequest implements AuthDTO {
 
         @Schema(hidden = true)
         private User user;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(
+            description = "회원가입 시 사용자 이용약관 동의 정보",
+            example = """
+            {
+                "termsCookie": "true",
+                "termsMarketing": "false"
+            }
+            """
+    )
+    public static class TermsRequestData {
+        @Schema(description = "쿠키 이용약관", example = "true", required = true)
+        @NotNull private String termsCookie;
+
+        @Schema(description = "마케팅 이용약관", example = "true", required = true)
+        @NotNull private String termsMarketing;
+
+
     }
 }

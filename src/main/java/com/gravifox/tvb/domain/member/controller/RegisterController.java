@@ -6,6 +6,7 @@ import com.gravifox.tvb.domain.member.dto.register.RegisterResponse;
 import com.gravifox.tvb.domain.member.exception.common.ErrorMessageMap;
 import com.gravifox.tvb.domain.member.exception.register.InvalidFormatException;
 import com.gravifox.tvb.domain.member.service.RegisterService;
+import com.gravifox.tvb.domain.member.service.UserTermService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,6 +34,7 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class RegisterController {
     private final RegisterService registerService;
+    private final UserTermService userTermService;
 
     @Operation(
             summary = "사용자 등록",
