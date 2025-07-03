@@ -1,13 +1,9 @@
 package com.gravifox.tvb.api.domain.dashboard.service;
 
-import com.gravifox.tvb.domain.dashboard.domain.Dashboard;
 import com.gravifox.tvb.domain.dashboard.dto.DashboardInfoResponse;
 import com.gravifox.tvb.domain.dashboard.repository.DashboardRepository;
-import com.gravifox.tvb.domain.dashboard.service.DashboardService;
 import com.gravifox.tvb.domain.dashboard.service.impl.DashboardServiceImpl;
-import com.gravifox.tvb.domain.member.domain.user.User;
 import com.gravifox.tvb.domain.member.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

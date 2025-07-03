@@ -1,30 +1,35 @@
-package com.gravifox.tvb.api.domain.admin.repo;
+package com.gravifox.tvb.api.domain.member.repo;
 
 import com.gravifox.tvb.domain.admin.domain.Term;
 import com.gravifox.tvb.domain.admin.repository.TermRepository;
+import com.gravifox.tvb.domain.member.domain.UserTerm;
+import com.gravifox.tvb.domain.member.repository.UserTermRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class TermRepositoryTest {
+public class UserTermRepositoryTest {
     @Autowired
-    TermRepository termRepository;
+    UserTermRepository userTermRepository;
 
     @Autowired
     TestEntityManager entityManager;
 
-    @Test
-    public void saveTermEntity() {
-        Term term = Term.builder()
+    Term term;
+
+    @BeforeEach
+    public void setUp() {
+        term = Term.builder()
                 .termKey("tos")
                 .termTitle("Terms of Service")
                 .termVersion("1.0")
@@ -34,11 +39,21 @@ public class TermRepositoryTest {
                 .build();
         entityManager.persist(term);
         entityManager.flush();
+    }
+    @Test
+    public void saveUserTermEntity() {
+        UserTerm userTerm = UserTerm.builder()
+                .userNo(32L)
+                .termId(term.getTermId())
+                .agreedVersion(term.getTermVersion())
+                .build();
 
-        Term saved = termRepository.save(term);
+        entityManager.persist(userTerm);
+        entityManager.flush();
 
-        assertThat(saved.getTermId()).isNotNull();
-        assertThat(saved.getTermKey()).isEqualTo("tos");
-        assertThat(saved.getTermTitle()).isEqualTo("Terms of Service");
+        UserTerm saved = userTermRepository.save(userTerm);
+
+        assertThat(saved.getTermId()).isEqualTo(term.getTermId());
+        assertThat(saved.getAgreedVersion()).isEqualTo(term.getTermVersion());
     }
 }
